@@ -1,6 +1,7 @@
 import { View, Text, Button, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import React from "react";
+import CustomButton from "@/components/CustomButton";
 
 export default function PlannerScreen() {
   const router = useRouter();
@@ -8,11 +9,11 @@ export default function PlannerScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Select a plan type</Text>
-      <Button 
+      <CustomButton 
         title="Add Code Practice" 
         onPress={() => router.push("/(stack)/select/code")} 
       />
-      <Button 
+      <CustomButton 
         title="Select Sport Activity" 
         onPress={() => router.push("/(stack)/select/sport")} 
       />
