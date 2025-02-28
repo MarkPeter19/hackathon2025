@@ -1,6 +1,7 @@
 import { View, Text, Button, StyleSheet } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import React from "react";
+import CustomButton from "@/components/CustomButton";
 
 // Dummy kérdések és válaszok (ugyanazok, mint a quizz.tsx-ben)
 const quizData = [
@@ -59,7 +60,10 @@ export default function SummaryScreen() {
       <Text style={styles.score}>
         Your Score: {score} / {quizData.length}
       </Text>
-      <Button title="Go Home" onPress={() => router.push("/")} />
+      <CustomButton 
+          title="Back to Home" 
+          onPress={() => router.replace("/")} 
+        />
     </View>
   );
 }
