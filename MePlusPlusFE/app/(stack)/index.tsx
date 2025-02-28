@@ -2,13 +2,13 @@ import { View, Text, Button, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import React from "react";
 
-export default function PlannerScreen() {
+export default function HomeScreen() {
   const router = useRouter();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Planner Page</Text>
-      <Button title="Go Back" onPress={() => router.back()} />
+      <Text style={styles.title}>Welcome!</Text>
+      <Button title="Make a Plan" onPress={() => router.push("/(stack)/planner")} />
     </View>
   );
 }
