@@ -19,6 +19,8 @@ export default function HomeScreen() {
           onPress={() => router.push("/(stack)/planner")} 
         />
       </View>
+      <CustomButton title="Test a Quizz" onPress={() => router.push("/(stack)/quizz")} />
+
     </View>
   );
 }
@@ -59,4 +61,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
   },
+
 });
