@@ -1,4 +1,5 @@
 import { View, Text, Button, StyleSheet } from "react-native";
+import CustomButton from "@/components/CustomButton";
 import { useRouter } from "expo-router";
 import React from "react";
 import CustomButton from "@/components/CustomButton";
@@ -24,6 +25,7 @@ export default function PlannerScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
     gap: 20, // Gombok közti távolság

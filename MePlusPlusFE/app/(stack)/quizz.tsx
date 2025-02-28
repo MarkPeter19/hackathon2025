@@ -6,37 +6,33 @@ import React, { useState } from "react";
 const quizData = [
   {
     question: "Ez le a kérdés amit kérdez az AI?",
-    answers: ["a) első válasz", "b) második válasz", "c) harmadik válasz"],
-    correctIndex: 0,
+    answers: ["első válasz", "második válasz", "harmadik válasz"]
   },
   {
-    question: "Melyik évben jelent meg a React?",
-    answers: ["a) 2017", "b) 2015", "c) 2013"],
-    correctIndex: 2,
+    question: "Ez is egy kérdés?",
+    answers: ["első válasz", "második válasz", "harmadik válasz"]
   },
   {
-    question: "ssdfsdsdcsdcsd sdf sdfsd  sdcsd",
-    answers: ["a) sdsd", "b) 2sds015", "c) asdas"],
-    correctIndex: 1,
+    question: "Ez is egy kérdés?",
+    answers: ["első válasz", "második válasz", "harmadik válasz"]
   },
 ];
 
 export default function QuizzScreen() {
   const router = useRouter();
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
+  const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
 
   const handleAnswer = (index: number) => {
-    setSelectedAnswers(prevAnswers => [...prevAnswers, index]);
+    setSelectedAnswers(prevAnswers => [...prevAnswers, "temp"]);
 
     setTimeout(() => {
       if (currentQuestion < quizData.length - 1) {
         setCurrentQuestion(currentQuestion + 1);
       } else {
-        router.push({
-          pathname: "/(stack)/summary",
-          params: { selectedAnswers: JSON.stringify([...selectedAnswers, index]) },
-        });
+        router.push({pathname: "/(stack)/summary",});
+        // Here will go the API call to send the answers to the server
+        // and get the results back on a new screen
       }
     }, 1000);
   };
@@ -65,10 +61,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#fff",
   },
   questionContainer: {
     backgroundColor: "#f1f1f1",
+    flex: 1,
+    height: 20,
     padding: 20,
     borderRadius: 10,
     marginBottom: 20,
@@ -76,7 +74,6 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   question: {
-    fontSize: 18,
     fontWeight: "bold",
     textAlign: "center",
   },
@@ -89,7 +86,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   answerText: {
-    fontSize: 16,
     fontWeight: "bold",
   },
 });
