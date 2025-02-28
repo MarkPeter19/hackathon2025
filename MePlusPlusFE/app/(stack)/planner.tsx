@@ -1,4 +1,5 @@
 import { View, Text, Button, StyleSheet } from "react-native";
+import CustomButton from "@/components/CustomButton";
 import { useRouter } from "expo-router";
 import React from "react";
 
@@ -8,11 +9,11 @@ export default function PlannerScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Select a plan type</Text>
-      <Button 
+      <CustomButton 
         title="Add Code Practice" 
         onPress={() => router.push("/(stack)/select/code")} 
       />
-      <Button 
+      <CustomButton 
         title="Select Sport Activity" 
         onPress={() => router.push("/(stack)/select/sport")} 
       />
@@ -23,6 +24,7 @@ export default function PlannerScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
     gap: 20, // Gombok közti távolság
