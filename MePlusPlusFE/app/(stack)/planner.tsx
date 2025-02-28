@@ -2,7 +2,7 @@ import { View, Text, Button, StyleSheet } from "react-native";
 import CustomButton from "@/components/CustomButton";
 import { useRouter } from "expo-router";
 import React from "react";
-import CustomButton from "@/components/CustomButton";
+
 
 export default function PlannerScreen() {
   const router = useRouter();
