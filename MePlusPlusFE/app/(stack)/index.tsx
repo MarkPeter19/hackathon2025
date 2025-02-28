@@ -9,6 +9,7 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Welcome!</Text>
       <Button title="Make a Plan" onPress={() => router.push("/(stack)/planner")} />
+      <Button title="Test a Quizz" onPress={() => router.push("/(stack)/quizz")} />
     </View>
   );
 }
@@ -24,4 +25,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 20,
   },
+
 });
