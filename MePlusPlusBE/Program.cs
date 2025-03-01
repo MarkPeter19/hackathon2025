@@ -18,6 +18,7 @@ builder.Services.AddTransient<IQuestRepository, QuestRepository>();
 builder.Services.AddTransient<IPlanRepository, PlanRepository>();
 builder.Services.AddTransient<ICheckQuestRepository, CheckQuestRepository>();
 builder.Services.AddTransient<ILevelRepository, LevelRepository>();
+builder.Services.AddTransient<IQuizRepository, QuizRepository>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
