@@ -40,12 +40,16 @@ const axiosGet = (url: string): Promise<any> =>
 const axiosPost = (url: string, data: unknown): Promise<any> =>
     axiosFetch({ method: 'POST', url, data });
 
-const url: string = "https://8da9-217-73-170-83.ngrok-free.app/api/Category/getCategory";
+const url: string = "https://0aa4-217-73-170-83.ngrok-free.app";
 
 // GET requests
 
 export function fetchPlans() : Promise<any> {
-    return axiosGet(url);
+    return axiosGet(`${url}/api/Category/getCategory`);
+}
+
+export function fetchHome() : Promise<any> {
+    return axiosGet(`${url}/api/Home/getHome?id=1`);
 }
 
 

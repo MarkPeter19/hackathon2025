@@ -8,7 +8,7 @@ export default function StackLayout() {
       <Stack.Screen name="planner" options={{ title: "Planner" }} />
       <Stack.Screen name="select/[type]" options={{ title: "Select" }} />
       <Stack.Screen name="quizz" options={{ title: "Quiz" }} />
-      <Stack.Screen name="summary" options={{ title: "Summary" }} />
+      <Stack.Screen name="summary" options={{ title: "Summary", headerBackVisible: false, gestureEnabled: false, }} />
     </Stack>
   );
 }

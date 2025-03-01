@@ -7,7 +7,6 @@ import { useState } from "react";
 import { Plan } from "@/models/Plan";
 import React from "react";
 
-
 export default function PlannerScreen() {
   const router = useRouter();
   const [plans, setPlans] = useState<Plan[]>([]);
@@ -17,43 +16,38 @@ export default function PlannerScreen() {
       .then((data) => setPlans(data))
       .then(() => console.log(plans))
       .catch((error) => console.log(error));
-    
   }, []);
-
-
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Select a plan type</Text>
-      <Text style={{alignSelf: "flex-start", marginLeft: 20, fontWeight: "bold"}}>Programming</Text>
+      <Text
+        style={{ alignSelf: "flex-start", marginLeft: 20, fontWeight: "bold" }}
+      >
+        Programming
+      </Text>
       {plans.map((plan) => {
         if (plan.type === "Programming") {
-          return (
-            <CustomButton 
-            key={plan.id} 
-            title={plan.name} 
-            />
-          );
+          return <CustomButton key={plan.id} title={plan.name} />;
         }
       })}
-      <CustomButton 
-        title="+" 
-        onPress={() => router.push("/(stack)/select/code")} 
-        />
-      <Text style={{alignSelf: "flex-start", marginLeft: 20, fontWeight: "bold"}}>Sport</Text>
+      <CustomButton
+        title="+"
+        onPress={() => router.push("/(stack)/select/code")}
+      />
+      <Text
+        style={{ alignSelf: "flex-start", marginLeft: 20, fontWeight: "bold" }}
+      >
+        Sport
+      </Text>
       {plans.map((plan) => {
         if (plan.type === "Sport") {
-          return (
-            <CustomButton 
-              key={plan.id} 
-              title={plan.name} 
-            />
-          );
+          return <CustomButton key={plan.id} title={plan.name} />;
         }
       })}
-      <CustomButton 
-        title="+" 
-        onPress={() => router.push("/(stack)/select/sport")} 
+      <CustomButton
+        title="+"
+        onPress={() => router.push("/(stack)/select/sport")}
       />
     </View>
   );
