@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import { PlanIndicator } from "../models/Home";
 import { CircularProgress } from "react-native-circular-progress";
 import { useRouter } from 'expo-router';
+import FontAwsome from "react-native-vector-icons/MaterialCommunityIcons";
 
 // icons
 const icons: { [key: string]: any } = {
@@ -20,6 +21,16 @@ const icons: { [key: string]: any } = {
   // default
   default: require("../assets/images/icons/default.png"),
 };
+
+const bede_icons: { [key: string]: { icone: string; color: string } } = {
+  Bronz: { icone: "hexagon-outline", color: "#cd7f32" },     // Bronze color
+  Silver: { icone: "hexagon-slice-2", color: "#C0C0C0" },       // Silver color
+  Gold: { icone: "hexagon-slice-4", color: "#FFD700" },         // Gold color
+  Platinum: { icone: "hexagon-slice-6", color: "#e5e4e2" },     // Platinum color
+  Diamond: { icone: "diamond", color: "#b9f2ff" },              // Diamond color
+};
+
+
 
 interface Props {
   plan: PlanIndicator;
@@ -47,6 +58,7 @@ const PlanProgress: React.FC<Props> = ({ plan }) => {
         <Image source={iconSource} style={styles.icon} />
       </View>
       <Text style={styles.text}>{plan.categoryName}</Text>
+      <FontAwsome name={bede_icons[plan.levelName].icone} size={20} color={bede_icons[plan.levelName].color} />
     </View>
   );
 };
