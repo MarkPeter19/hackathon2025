@@ -21,6 +21,19 @@ namespace MePlusPlusBE.Repository
             }
             return null;
         }
+        public async Task<Category?> GetCategoryByPlanId(int id)
+        {
+            var plan = await _context.Plans.Where(p => p.Id == id).FirstOrDefaultAsync();
+            if (plan != null)
+            {
+                var category = await _context.Categories.Where(c => c.Id == plan.CategoryId).FirstOrDefaultAsync();
+                if (category != null)
+                {
+                    return category;
+                }
+            }
+            return null;
+        }
 
     }
 }
