@@ -12,6 +12,9 @@ namespace MePlusPlusBE.Models
         [ForeignKey("FlipCardLevel")]
         public int FlipCardLevelId { get; set; }
         public FlipCardLevel FlipCardLevel { get; set; }
+        [ForeignKey("FlipCardCategory")]
+        public int FlipCardCategoryId { get; set; }
+        public FlipCardCategory FlipCardCategory { get; set; }
         public ICollection<FlipCardQuiz>? FlipCardQuizzes { get; set; }
     }
 }

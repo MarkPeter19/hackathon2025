@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MePlusPlusBE.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250228231929_NewMigration")]
-    partial class NewMigration
+    [Migration("20250301100853_New")]
+    partial class New
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -87,6 +87,9 @@ namespace MePlusPlusBE.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("FlipCardCategoryId")
+                        .HasColumnType("int");
+
                     b.Property<int>("FlipCardLevelId")
                         .HasColumnType("int");
 
@@ -96,9 +99,32 @@ namespace MePlusPlusBE.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("FlipCardCategoryId");
+
                     b.HasIndex("FlipCardLevelId");
 
                     b.ToTable("FlipCards");
+                });
+
+            modelBuilder.Entity("MePlusPlusBE.Models.FlipCardCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FlipCardCategories");
                 });
 
             modelBuilder.Entity("MePlusPlusBE.Models.FlipCardLevel", b =>
@@ -283,11 +309,19 @@ namespace MePlusPlusBE.Migrations
 
             modelBuilder.Entity("MePlusPlusBE.Models.FlipCard", b =>
                 {
+                    b.HasOne("MePlusPlusBE.Models.FlipCardCategory", "FlipCardCategory")
+                        .WithMany("FlipCards")
+                        .HasForeignKey("FlipCardCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MePlusPlusBE.Models.FlipCardLevel", "FlipCardLevel")
                         .WithMany("FlipCards")
                         .HasForeignKey("FlipCardLevelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("FlipCardCategory");
 
                     b.Navigation("FlipCardLevel");
                 });
@@ -368,6 +402,11 @@ namespace MePlusPlusBE.Migrations
             modelBuilder.Entity("MePlusPlusBE.Models.FlipCard", b =>
                 {
                     b.Navigation("FlipCardQuizzes");
+                });
+
+            modelBuilder.Entity("MePlusPlusBE.Models.FlipCardCategory", b =>
+                {
+                    b.Navigation("FlipCards");
                 });
 
             modelBuilder.Entity("MePlusPlusBE.Models.FlipCardLevel", b =>

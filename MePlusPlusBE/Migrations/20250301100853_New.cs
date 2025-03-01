@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MePlusPlusBE.Migrations
 {
     /// <inheritdoc />
-    public partial class NewMigration : Migration
+    public partial class New : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -37,6 +37,20 @@ namespace MePlusPlusBE.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CheckQuests", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FlipCardCategories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FlipCardCategories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -93,11 +107,18 @@ namespace MePlusPlusBE.Migrations
                     AnswerOne = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AnswerTwo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CorrectAnswer = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FlipCardLevelId = table.Column<int>(type: "int", nullable: false)
+                    FlipCardLevelId = table.Column<int>(type: "int", nullable: false),
+                    FlipCardCategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_FlipCards", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FlipCards_FlipCardCategories_FlipCardCategoryId",
+                        column: x => x.FlipCardCategoryId,
+                        principalTable: "FlipCardCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_FlipCards_FlipCardLevels_FlipCardLevelId",
                         column: x => x.FlipCardLevelId,
@@ -213,6 +234,11 @@ namespace MePlusPlusBE.Migrations
                 column: "QuestId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_FlipCards_FlipCardCategoryId",
+                table: "FlipCards",
+                column: "FlipCardCategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_FlipCards_FlipCardLevelId",
                 table: "FlipCards",
                 column: "FlipCardLevelId");
@@ -254,6 +280,9 @@ namespace MePlusPlusBE.Migrations
 
             migrationBuilder.DropTable(
                 name: "Quests");
+
+            migrationBuilder.DropTable(
+                name: "FlipCardCategories");
 
             migrationBuilder.DropTable(
                 name: "FlipCardLevels");

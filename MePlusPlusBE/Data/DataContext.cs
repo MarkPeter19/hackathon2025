@@ -19,6 +19,7 @@ namespace MePlusPlusBE.Data
         public DbSet<Plan> Plans { get; set; }
         public DbSet<Quest> Quests { get; set; }
         public DbSet<User> Users { get; set; }
-     
+        public DbSet<FlipCardCategory> FlipCardCategories { get; set; }
+
     }
 }
