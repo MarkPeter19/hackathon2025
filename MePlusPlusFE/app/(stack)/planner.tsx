@@ -3,17 +3,20 @@ import CustomButton from "@/components/CustomButton";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import { fetchPlans } from "@/service/Fetching";
+import { useState } from "react";
+import { Plan } from "@/models/Plan";
 import React from "react";
 
 
 export default function PlannerScreen() {
   const router = useRouter();
-  const url  = "";
+  const [plans, setPlans] = useState<Plan[]>([]);
 
   useEffect(() => {
-    fetchPlans().then((data) => {
-      console.log(data);
-    });
+    fetchPlans()
+      .then((data) => setPlans(data))
+      .then(() => console.log(plans))
+      .catch((error) => console.log(error));
     
   }, []);
 
@@ -22,12 +25,34 @@ export default function PlannerScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Select a plan type</Text>
+      <Text style={{alignSelf: "flex-start", marginLeft: 20, fontWeight: "bold"}}>Programming</Text>
+      {plans.map((plan) => {
+        if (plan.type === "Programming") {
+          return (
+            <CustomButton 
+            key={plan.id} 
+            title={plan.name} 
+            />
+          );
+        }
+      })}
       <CustomButton 
-        title="Add Code Practice" 
+        title="+" 
         onPress={() => router.push("/(stack)/select/code")} 
-      />
+        />
+      <Text style={{alignSelf: "flex-start", marginLeft: 20, fontWeight: "bold"}}>Sport</Text>
+      {plans.map((plan) => {
+        if (plan.type === "Sport") {
+          return (
+            <CustomButton 
+              key={plan.id} 
+              title={plan.name} 
+            />
+          );
+        }
+      })}
       <CustomButton 
-        title="Select Sport Activity" 
+        title="+" 
         onPress={() => router.push("/(stack)/select/sport")} 
       />
     </View>
