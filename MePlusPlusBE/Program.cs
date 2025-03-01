@@ -1,4 +1,5 @@
 using MePlusPlusBE;
+using MePlusPlusBE.AIClient;
 using MePlusPlusBE.Data;
 using MePlusPlusBE.Interfaces;
 using MePlusPlusBE.Repository;
@@ -23,6 +24,10 @@ builder.Services.AddTransient<IQuizRepository, QuizRepository>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddLogging();
+string apiKey = builder.Configuration["ApiKeys:GeminiApiKey"];
+builder.Services.AddSingleton(new GeminiApiClient(apiKey));
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", policy =>

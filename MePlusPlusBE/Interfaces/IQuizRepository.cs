@@ -8,5 +8,6 @@ namespace MePlusPlusBE.Interfaces
         Task<ICollection<FlipCard>?> GetFlipCardsByCategory(int categoryId);
 
         Task<ICollection<CorrectedResponse>?> PostUserResponses(ICollection<UserResponseDto> responses);
+        Task<List<int>> AddFlipCards(ICollection<FlipCard> flipCards);
     }
 }

@@ -14,6 +14,16 @@ namespace MePlusPlusBE.Repository
             _context = context;
         }
 
+        public async Task<List<int>> AddFlipCards(ICollection<FlipCard> flipCards)
+        {
+            _context.FlipCards.AddRange(flipCards);
+            if(await Save() == true)
+            {
+                return flipCards.Select(fc => fc.Id).ToList();
+            }
+            return new List<int>();
+        }
+
         public async Task<ICollection<FlipCard>?> GetFlipCardsByCategory(int categoryId)
         {
             // Give me the name of the categoryId category
@@ -22,7 +32,7 @@ namespace MePlusPlusBE.Repository
             var flipCards = await _context.FlipCards
                 .Where(fc => fc.FlipCardCategory.Name.Equals(searchedCategory.Name))
                 .OrderBy(r => Guid.NewGuid())
-                .Take(10)
+                .Take(5)
                 .ToListAsync();
 
             if (flipCards != null)
