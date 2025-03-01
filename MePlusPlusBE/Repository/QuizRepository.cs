@@ -21,6 +21,8 @@ namespace MePlusPlusBE.Repository
             if (searchedCategory == null) return null;
             var flipCards = await _context.FlipCards
                 .Where(fc => fc.FlipCardCategory.Name.Equals(searchedCategory.Name))
+                .OrderBy(r => Guid.NewGuid())
+                .Take(10)
                 .ToListAsync();
 
             if (flipCards != null)
