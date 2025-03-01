@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { Quest } from "../models/Home";
 import Checkbox from "expo-checkbox";
+import { useRouter } from "expo-router";
 
 // load icons
 const icons: { [key: string]: any } = {
@@ -13,10 +14,12 @@ const icons: { [key: string]: any } = {
 
 interface Props {
   quest: Quest;
+  
 }
 
 const QuestItem: React.FC<Props> = ({ quest }) => {
   const [isChecked, setChecked] = useState(quest.isDone);
+  const router = useRouter();
 
   // Quest name and descrpition
   const questName =
@@ -35,7 +38,10 @@ const QuestItem: React.FC<Props> = ({ quest }) => {
       : icons.default;
 
   return (
-    <TouchableOpacity style={[styles.container, isChecked && styles.completed]}>
+    <TouchableOpacity
+      style={[styles.container, isChecked && styles.completed]}
+      onPress={quest.checkQuestId === null ? () => router.push("/(stack)/quizz") : undefined}
+    >
       <View style={styles.content}>
         {/* Icon */}
         <Image source={iconSource} style={styles.icon} />

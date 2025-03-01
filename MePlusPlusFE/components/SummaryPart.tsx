@@ -8,11 +8,11 @@ import FontAwsome from "react-native-vector-icons/FontAwesome";
 function SummaryPart(props: SummaryPartProps) {
     return (
         <View style={styles.container}>
-            {props.answer == props.correctAnswer ? (
+            {props.userAnswer == props.correctAnswer ? (
                 <View>
                     <Text style={[styles.question, styles.placeholder]}>{props.question}</Text>
                     <Text style={[styles.correct_answer, styles.placeholder, { marginLeft: 5 }]}>
-                        {props.answer}
+                        {props.userAnswer}
                         <FontAwsome name="check" size={20} color="green" alignSelf="flex-end" />
                     </Text>
                 </View>
@@ -20,13 +20,13 @@ function SummaryPart(props: SummaryPartProps) {
                 <View>
                     <Text style={[styles.question, styles.placeholder]}>{props.question}</Text>
                     <Text style={[styles.wrong_answer, styles.placeholder]}>
-                        {props.answer}
+                        {props.userAnswer}
                         <FontAwsome name="close" size={20} color="red" alignSelf="flex-end" />
                     </Text>
                     <Text style={[styles.correct_answer, styles.placeholder]}>
                         {props.correctAnswer}
                         {"\n\nExplantion:\n"}
-                        {props.explanation}
+                        {/* {props.explanation} */}
                     </Text>
                 </View>
             )}

@@ -16,8 +16,11 @@ namespace MePlusPlusBE.Repository
 
         public async Task<ICollection<FlipCard>?> GetFlipCardsByCategory(int categoryId)
         {
+            // Give me the name of the categoryId category
+            var searchedCategory = await _context.Categories.Where(c => c.Id == categoryId).FirstOrDefaultAsync();
+            if (searchedCategory == null) return null;
             var flipCards = await _context.FlipCards
-                .Where(fc => fc.FlipCardCategoryId == categoryId)
+                .Where(fc => fc.FlipCardCategory.Name.Equals(searchedCategory.Name))
                 .ToListAsync();
 
             if (flipCards != null)

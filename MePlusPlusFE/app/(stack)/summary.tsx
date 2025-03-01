@@ -3,38 +3,48 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import React from "react";
 import CustomButton from "@/components/CustomButton";
 import SummaryPart from "@/components/SummaryPart";
+import { SummaryPartProps } from "@/models/SummaryPart";
+import { useState, useEffect } from "react";
+import { postQuizAnswers } from "@/service/Fetching";
 
-// Dummy kérdések és válaszok (ugyanazok, mint a quizz.tsx-ben)
-const quizData = [
-  {
-    question: "Ez le a kérdés amit kérdez az AI?",
-    yourAnswer: "második válasz",
-    correctAnswer: "második válasz",
-    explanation: "Ez egy magyarázó szöveg a helyes válaszhoz.",
-  },
-  {
-    question: "Ez is egy kérdés1?",
-    yourAnswer: "első válasz",
-    correctAnswer: "második válasz",
-    explanation: "Ez egy magyarázó szöveg a helyes válaszhoz.",
-  },
-  {
-    question: "Ez is egy kérdés2?",
-    yourAnswer: "első válasz",
-    correctAnswer: "második válasz",
-    explanation: "Ez egy magyarázó szöveg a helyes válaszhoz.",
-  },
-  {
-    question: "Ez is egy kérdés2?",
-    yourAnswer: "első válasz",
-    correctAnswer: "második válasz",
-    explanation: "Ez egy magyarázó szöveg a helyes válaszhoz.",
-  },
-];
 
 export default function SummaryScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
+  const [summary, setSummary] = useState<SummaryPartProps[]>([]); // Start with dummy data
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (params.answers) {
+      console.log(params.answers)
+      setLoading(true);
+      try {
+        const userAnswers = JSON.parse(params.answers as string);
+        postQuizAnswers(userAnswers)
+          .then((response: React.SetStateAction<SummaryPartProps[]>) => {
+            setSummary(response); // Replace dummy data with API response
+            setLoading(false);
+          })
+          .catch((error: any) => {
+            console.error("Failed to submit answers:", error);
+            setLoading(false);
+          });
+      } catch (error) {
+        console.error("Error parsing answers:", error);
+        setLoading(false);
+      }
+    }
+  }, [params.answers]);
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading results...</Text>
+      </View>
+    );
+  }
+
+
 
   return (
     <View style={styles.container}>
@@ -44,13 +54,13 @@ export default function SummaryScreen() {
         style={styles.scrollView}
         showsVerticalScrollIndicator={true}
       >
-        {quizData.map((quizData, index) => (
+        {summary.map((one_summary, index) => (
           <SummaryPart
             key={index}
-            question={quizData.question}
-            answer={quizData.yourAnswer}
-            correctAnswer={quizData.correctAnswer}
-            explanation={quizData.explanation}
+            question={one_summary.question}
+            userAnswer={one_summary.userAnswer}
+            correctAnswer={one_summary.correctAnswer}
+            // explanation={quizData.explanation}
           />
         ))}
       </ScrollView>
