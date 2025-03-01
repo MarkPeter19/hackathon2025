@@ -11,15 +11,15 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <View style={styles.header_container}>
         <Image source={{ uri: base_image_url }} style={{ width: 50, height: 50, borderRadius: 50 }} />
-        <Text style={styles.title}>Welcome xyz</Text>
+        <View>
+          <Text style={styles.title}>Welcome xyz</Text>
+          <Text style={{ fontWeight: "bold", color: "green" }}>XP : 50</Text>
+        </View>
       </View>
       <View style={styles.content_container}>
-      <CustomButton 
-          title="Make a Plan" 
-          onPress={() => router.push("/(stack)/planner")} 
-        />
+        <CustomButton title="Make a Plan" onPress={() => router.push("/(stack)/planner")} />
+        <CustomButton title="Test a Quizz" onPress={() => router.push("/(stack)/quizz")} />
       </View>
-      <CustomButton title="Test a Quizz" onPress={() => router.push("/(stack)/quizz")} />
 
     </View>
   );
@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    gap: 20,
   },
 
 });
