@@ -40,7 +40,11 @@ const axiosGet = (url: string): Promise<any> =>
 const axiosPost = (url: string, data: unknown): Promise<any> =>
     axiosFetch({ method: 'POST', url, data });
 
+<<<<<<< Updated upstream
 const url: string = "https://a037-217-73-170-83.ngrok-free.app";
+=======
+const url: string = "https://f321-217-73-170-83.ngrok-free.app/";
+>>>>>>> Stashed changes
 
 // GET requests
 
