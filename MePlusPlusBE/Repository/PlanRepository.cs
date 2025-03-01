@@ -35,5 +35,15 @@ namespace MePlusPlusBE.Repository
             return null;
         }
 
+        public async Task<bool> AddNewPlan(Plan plan)
+        {
+            _context.Plans.Add(plan);
+            return await Save();
+        }
+
+        public async Task<bool> Save()
+        {
+            return await _context.SaveChangesAsync() > 0;
+        }
     }
 }

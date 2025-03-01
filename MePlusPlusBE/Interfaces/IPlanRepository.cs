@@ -6,5 +6,6 @@ namespace MePlusPlusBE.Interfaces
     {
         Task<ICollection<Plan>> GetPlansByUserNotFreezed(int id);
         Task<Category?> GetCategoryByPlanId(int id);
+        Task<bool> AddNewPlan(Plan plan);
     }
 }
