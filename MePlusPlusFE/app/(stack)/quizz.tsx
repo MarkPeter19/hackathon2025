@@ -50,7 +50,7 @@ export default function QuizzScreen() {
         <Text style={styles.questione}>{quizData[currentQuestion].question}</Text>
       </View>
         <TouchableOpacity style={styles.answerButton} onPress={() => handleAnswer(quizData[currentQuestion].answerOne)}>
-          <Text style={styles.answerText}>{quizData[currentQuestion].question}</Text>
+          <Text style={styles.answerText}>{quizData[currentQuestion].answerOne}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.answerButton} onPress={() => handleAnswer(quizData[currentQuestion].answerTwo)}>
           <Text style={styles.answerText}>{quizData[currentQuestion].answerTwo}</Text>

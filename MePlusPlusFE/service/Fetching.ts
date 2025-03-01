@@ -41,7 +41,10 @@ const axiosGet = (url: string): Promise<any> =>
 const axiosPost = (url: string, data: unknown): Promise<any> =>
     axiosFetch({ method: 'POST', url, data });
 
-const url: string =  "https://19a5-217-73-170-83.ngrok-free.app";
+const axiosPut = (url: string, data: unknown): Promise<any> =>
+    axiosFetch({ method: 'PUT', url, data });
+
+const url: string =  "https://fd62-217-73-170-83.ngrok-free.app";
 
 // GET requests
 
@@ -59,6 +62,10 @@ export function fetchFlipCards() : Promise<any> {
 
 export function postQuizAnswers(answers: UserResponse[]): Promise<any> {
     return axiosPost(`${url}/api/Quiz/postUserResponses`, answers);
+}
+
+export function updateUserXp(userId: number, xpAmount: number): Promise<any> {
+    return axiosPut(`${url}/api/Quest/updateUserXp?userId=${userId}&xpAmount${xpAmount}`, null);
 }
 
 

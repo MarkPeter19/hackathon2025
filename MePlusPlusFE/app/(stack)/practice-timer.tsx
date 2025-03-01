@@ -112,12 +112,12 @@ const PracticeTimer = () => {
       <CompletionModal
         visible={showCompleteModal}
         xp={xpValue}
-        onClose={() => router.push("/")}
+        onClose={() => router.replace("/")}
       />
       <ExitConfirmationModal
         visible={showExitModal}
         onCancel={() => setShowExitModal(false)}
-        onExit={() => router.push("/")}
+        onExit={() => router.replace("/")}
       />
     </View>
   );
