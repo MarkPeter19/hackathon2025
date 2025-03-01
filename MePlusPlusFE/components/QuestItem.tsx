@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { useRouter } from "expo-router";
 import { Quest } from "../models/Home";
 import Checkbox from "expo-checkbox";
+import PracticeModal from "./PracticeModal"; // Importáljuk a modalt
 
 // Ikonok betöltése
 const icons: { [key: string]: any } = {
@@ -12,7 +14,15 @@ const icons: { [key: string]: any } = {
 };
 
 // Programozási és sport kategóriák
-const programmingCategories = ["Python", "Flutter", "Java", "React Native", "React", "NodeJs", "Android"];
+const programmingCategories = [
+  "Python",
+  "Flutter",
+  "Java",
+  "React Native",
+  "React",
+  "NodeJs",
+  "Android",
+];
 const sportCategories = ["Running", "Swimming", "Cycling", "Football"];
 
 interface Props {
@@ -21,6 +31,8 @@ interface Props {
 
 const QuestItem: React.FC<Props> = ({ quest }) => {
   const [isChecked, setChecked] = useState(quest.isDone);
+  const [modalVisible, setModalVisible] = useState(false);
+  const router = useRouter();
 
   // A kategória neve kisbetűssé alakítva (normalizálás)
   const categoryName = quest.categoryName.toLowerCase();
@@ -46,27 +58,68 @@ const QuestItem: React.FC<Props> = ({ quest }) => {
       ? "Quiz"
       : `${quest.checkQuest?.recomendedActivity} ${quest.checkQuest?.mesure}`;
 
+  const extractDurationInMinutes = (mesure: string | undefined) => {
+    if (!mesure) return 0;
+    const matches = mesure.match(/(\d+)\s*(minutes|min|hours|h)/i);
+    if (!matches) return 0;
+
+    const value = parseInt(matches[1]); // Az első szám a "mesure"-ből
+    const unit = matches[2].toLowerCase(); // Az időegység (minutes, min, hours, h)
+
+    return unit.includes("hour") || unit.includes("h") ? value * 60 : value; // Ha óra, szorozzuk 60-nal
+  };
+
+  const startPracticeQuest = () => {
+    setModalVisible(false);
+    const durationInMinutes = extractDurationInMinutes(
+      quest.checkQuest?.mesure
+    );
+
+    router.push(
+      `/practice-timer?duration=${durationInMinutes}&description=${encodeURIComponent(
+        questName
+      )}&xp=${quest.xpLevel}`
+    );
+  };
+
   return (
-    <TouchableOpacity style={[styles.container, isChecked && styles.completed]}>
-      <View style={styles.content}>
-        {/* Ikon megjelenítése */}
-        <Image source={iconSource} style={styles.icon} />
+    <>
+      <TouchableOpacity
+        style={[styles.container, isChecked && styles.completed]}
+        onPress={() => {
+          if (questType === "Practice") setModalVisible(true);
+        }}
+      >
+        <View style={styles.content}>
+          {/* Ikon megjelenítése */}
+          <Image source={iconSource} style={styles.icon} />
 
-        {/* Szöveg és XP érték */}
-        <View style={styles.textContainer}>
-          <Text style={styles.text}>{questName}</Text>
-          <Text style={styles.xpText}>{quest.xpLevel} XP</Text>
+          {/* Szöveg és XP érték */}
+          <View style={styles.textContainer}>
+            <Text style={styles.text}>{questName}</Text>
+            <Text style={styles.xpText}>{quest.xpLevel} XP</Text>
+          </View>
         </View>
-      </View>
 
-      {/* Checkbox */}
-      <Checkbox
-        style={styles.checkbox}
-        value={isChecked}
-        onValueChange={setChecked}
-        color={isChecked ? "#4CAF50" : "#FFF"}
+        {/* Checkbox */}
+        <Checkbox
+          style={styles.checkbox}
+          value={isChecked}
+          onValueChange={setChecked}
+          color={isChecked ? "#4CAF50" : "#FFF"}
+        />
+      </TouchableOpacity>
+
+      {/* PracticeModal megjelenítése */}
+      <PracticeModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onStart={startPracticeQuest}
+        duration={quest.checkQuest?.mesure || "Unknown"}
+        description={questName}
+        xp={quest.xpLevel}
       />
-    </TouchableOpacity>
+    </>
   );
 };
 
