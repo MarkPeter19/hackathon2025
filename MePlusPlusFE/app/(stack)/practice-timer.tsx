@@ -1,29 +1,58 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import { View, Text, StyleSheet, Button, BackHandler } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import Svg, { Circle } from "react-native-svg";
 import CustomButton from "@/components/CustomButton";
+import CompletionModal from "@/components/CompletionModal";
+import ExitConfirmationModal from "@/components/ExitModal";
 
 const formatTime = (seconds: number) => {
   const h = Math.floor(seconds / 3600);
   const m = Math.floor((seconds % 3600) / 60);
   const s = seconds % 60;
-  return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+  return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}:${s
+    .toString()
+    .padStart(2, "0")}`;
 };
 
 const PracticeTimer = () => {
+  const [showCompleteModal, setShowCompleteModal] = useState(false);
+  const [showExitModal, setShowExitModal] = useState(false);
   const router = useRouter();
-  const { duration = "0", description = "Unknown", xp = "0" } = useLocalSearchParams();
+  const {
+    duration = "0",
+    description = "Unknown",
+    xp = "0",
+  } = useLocalSearchParams();
+  const xpValue = Array.isArray(xp) ? xp[0] : xp.toString();
 
   // Konvertáljuk a percben kapott `duration` értéket másodpercekké
-  const timeInSeconds = parseInt(Array.isArray(duration) ? duration[0] : duration) * 60;
+  const timeInSeconds =
+    parseInt(Array.isArray(duration) ? duration[0] : duration) * 60;
   const [timeLeft, setTimeLeft] = useState(timeInSeconds);
 
   useEffect(() => {
-    if (timeLeft <= 0) return;
+    if (timeLeft <= 0) {
+      setShowCompleteModal(true); // Ha az idő lejárt, mutasd a modalt
+      return;
+    }
     const timer = setInterval(() => setTimeLeft((t) => t - 1), 1000);
     return () => clearInterval(timer);
   }, [timeLeft]);
+  
+
+  useEffect(() => {
+    const backAction = () => {
+      setShowExitModal(true);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+    return () => backHandler.remove();
+  }, []);
 
   // Progress kiszámítása (0-100% közötti érték)
   const progress = (timeLeft / timeInSeconds) * 100;
@@ -49,7 +78,14 @@ const PracticeTimer = () => {
       <View style={styles.timerContainer}>
         <Svg width={200} height={200} viewBox="0 0 200 200">
           {/* Háttér kör */}
-          <Circle cx="100" cy="100" r={radius} stroke="#e0e0e0" strokeWidth={strokeWidth} fill="none" />
+          <Circle
+            cx="100"
+            cy="100"
+            r={radius}
+            stroke="#e0e0e0"
+            strokeWidth={strokeWidth}
+            fill="none"
+          />
           {/* Animált progress kör */}
           <Circle
             cx="100"
@@ -68,7 +104,21 @@ const PracticeTimer = () => {
       </View>
 
       {/* End Practice gomb */}
-      <CustomButton title="End Practice" onPress={() => router.back()} />
+      <CustomButton
+        title="End Practice"
+        onPress={() => setShowExitModal(true)}
+      />
+
+      <CompletionModal
+        visible={showCompleteModal}
+        xp={xpValue}
+        onClose={() => router.push("/")}
+      />
+      <ExitConfirmationModal
+        visible={showExitModal}
+        onCancel={() => setShowExitModal(false)}
+        onExit={() => router.push("/")}
+      />
     </View>
   );
 };
