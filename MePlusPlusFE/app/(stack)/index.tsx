@@ -1,11 +1,20 @@
-import { View, Text, Button, StyleSheet, Image, ActivityIndicator, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  Image,
+  ActivityIndicator,
+  FlatList,
+} from "react-native";
 import { useRouter } from "expo-router";
 import CustomButton from "../../components/CustomButton";
 import React, { useEffect, useState } from "react";
-import { fetchHome } from "../../service/Fetching"
+import { fetchHome } from "../../service/Fetching";
 import { HomeData } from "../../models/Home";
 import PlanProgress from "../../components/PlanProgress";
 import QuestItem from "../../components/QuestItem";
+import QuestList from "@/components/QuestList";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -41,7 +50,8 @@ export default function HomeScreen() {
   }
 
   const { user, plans, quests } = homeData;
-  const base_image_url = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+  const base_image_url =
+    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 
   return (
     <View style={styles.container}>
@@ -49,7 +59,9 @@ export default function HomeScreen() {
       <View style={styles.header_container}>
         <Image source={{ uri: base_image_url }} style={styles.profileImage} />
         <View>
-          <Text style={styles.title}>Welcome {user.firstName} {user.lastName}</Text>
+          <Text style={styles.title}>
+            Welcome {user.firstName} {user.lastName}
+          </Text>
           <Text style={styles.xpText}>XP Level: {user.xpLevel}</Text>
         </View>
       </View>
@@ -64,15 +76,13 @@ export default function HomeScreen() {
       />
 
       {/* Quests megjelenítése */}
-      <FlatList
-        data={quests}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <QuestItem quest={item} />}
-        contentContainerStyle={styles.questsContainer}
-      />
+      <QuestList quests={quests} />
 
       {/* Make a Plan gomb */}
-      <CustomButton title="Make a Plan" onPress={() => router.push("/(stack)/planner")} />
+      <CustomButton
+        title="Make a Plan"
+        onPress={() => router.push("/(stack)/planner")}
+      />
     </View>
   );
 }

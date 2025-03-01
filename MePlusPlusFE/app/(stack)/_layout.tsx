@@ -9,6 +9,7 @@ export default function StackLayout() {
       <Stack.Screen name="select/[type]" options={{ title: "Select" }} />
       <Stack.Screen name="quizz" options={{ title: "Quiz" }} />
       <Stack.Screen name="summary" options={{ title: "Summary", headerBackVisible: false, gestureEnabled: false, }} />
+      <Stack.Screen name="practice-timer" options={{ title: "Practice Timer" }} />
     </Stack>
   );
 }
