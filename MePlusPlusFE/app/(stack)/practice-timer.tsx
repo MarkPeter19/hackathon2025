@@ -5,14 +5,13 @@ import Svg, { Circle } from "react-native-svg";
 import CustomButton from "@/components/CustomButton";
 import CompletionModal from "@/components/CompletionModal";
 import ExitConfirmationModal from "@/components/ExitModal";
+import FailConfirmationModal from "@/components/FailConfirmationModal";
 
 const formatTime = (seconds: number) => {
   const h = Math.floor(seconds / 3600);
   const m = Math.floor((seconds % 3600) / 60);
   const s = seconds % 60;
-  return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}:${s
-    .toString()
-    .padStart(2, "0")}`;
+  return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
 };
 
 const PracticeTimer = () => {
@@ -20,38 +19,35 @@ const PracticeTimer = () => {
   const [showExitModal, setShowExitModal] = useState(false);
   const [showFailModal, setShowFailModal] = useState(false);
   const router = useRouter();
-  const {
-    duration = "0",
-    description = "Unknown",
-    xp = "0",
-  } = useLocalSearchParams();
+  const { duration = "0", description = "Unknown", xp = "0" } = useLocalSearchParams();
   const xpValue = Array.isArray(xp) ? xp[0] : xp.toString();
 
-  const timeInSeconds =
-    parseInt(Array.isArray(duration) ? duration[0] : duration) * 60;
+  const timeInSeconds = parseInt(Array.isArray(duration) ? duration[0] : duration) * 60;
   const [timeLeft, setTimeLeft] = useState(timeInSeconds);
+  const [appActive, setAppActive] = useState(true);
 
   useEffect(() => {
-    if (timeLeft <= 0) {
+    let timer: NodeJS.Timeout;
+    if (timeLeft > 0 && appActive) {
+      timer = setInterval(() => setTimeLeft((t) => t - 1), 1000);
+    } else if (timeLeft <= 0) {
       setShowCompleteModal(true);
-      return;
     }
-    const timer = setInterval(() => setTimeLeft((t) => t - 1), 1000);
     return () => clearInterval(timer);
-  }, [timeLeft]);
+  }, [timeLeft, appActive]);
 
   // Figyeli az alkalmazás állapotát (aktív / háttérben van)
   useEffect(() => {
     const handleAppStateChange = (nextAppState: string) => {
       if (nextAppState !== "active") {
+        setAppActive(false);
         setShowFailModal(true);
+      } else {
+        setAppActive(true);
       }
     };
 
-    const subscription = AppState.addEventListener(
-      "change",
-      handleAppStateChange
-    );
+    const subscription = AppState.addEventListener("change", handleAppStateChange);
     return () => subscription.remove();
   }, []);
 
@@ -75,14 +71,7 @@ const PracticeTimer = () => {
 
       <View style={styles.timerContainer}>
         <Svg width={200} height={200} viewBox="0 0 200 200">
-          <Circle
-            cx="100"
-            cy="100"
-            r={radius}
-            stroke="#e0e0e0"
-            strokeWidth={strokeWidth}
-            fill="none"
-          />
+          <Circle cx="100" cy="100" r={radius} stroke="#e0e0e0" strokeWidth={strokeWidth} fill="none" />
           <Circle
             cx="100"
             cy="100"
@@ -99,21 +88,11 @@ const PracticeTimer = () => {
         <Text style={styles.timer}>{formatTime(timeLeft)}</Text>
       </View>
 
-      <CustomButton
-        title="End Practice"
-        onPress={() => setShowExitModal(true)}
-      />
+      <CustomButton title="End Practice" onPress={() => setShowExitModal(true)} />
 
-      <CompletionModal
-        visible={showCompleteModal}
-        xp={xpValue}
-        onClose={() => router.replace("/")}
-      />
-      <ExitConfirmationModal
-        visible={showExitModal}
-        onCancel={() => setShowExitModal(false)}
-        onExit={() => router.replace("/")}
-      />
+      <CompletionModal visible={showCompleteModal} xp={xpValue} onClose={() => router.replace("/")} />
+      <ExitConfirmationModal visible={showExitModal} onCancel={() => setShowExitModal(false)} onExit={() => router.replace("/")} />
+      <FailConfirmationModal visible={showFailModal} onExit={() => router.replace("/")} message="Practice failed. You left the screen!" />
     </View>
   );
 };
