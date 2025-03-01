@@ -114,12 +114,6 @@ const PracticeTimer = () => {
         onCancel={() => setShowExitModal(false)}
         onExit={() => router.replace("/")}
       />
-      <ExitConfirmationModal
-        visible={showFailModal}
-        onCancel={() => setShowFailModal(false)}
-        onExit={() => router.replace("/")}
-        message="Practice failed. You left the screen!"
-      />
     </View>
   );
 };

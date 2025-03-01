@@ -1,7 +1,9 @@
 ﻿using MePlusPlusBE.Data;
+using MePlusPlusBE.Dto;
 using MePlusPlusBE.Interfaces;
 using MePlusPlusBE.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace MePlusPlusBE.Repository
 {
@@ -21,6 +23,29 @@ namespace MePlusPlusBE.Repository
                 return user;
             }
             return null;
+        }
+
+        public async Task<bool> UpdateUserXp(int userId, int xpAmount)
+        {
+            var user = await _context.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
+
+            user.XpLevel += xpAmount;
+            _context.Update(user);
+
+            if (await Save() == true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        private async Task<bool> Save()
+        {
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 }

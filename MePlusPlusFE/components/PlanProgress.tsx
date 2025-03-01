@@ -6,7 +6,7 @@ import { useRouter } from 'expo-router';
 import FontAwsome from "react-native-vector-icons/MaterialCommunityIcons";
 
 // icons
-const icons: { [key: string]: any } = {
+export const icons: { [key: string]: any } = {
   Running: require("../assets/images/icons/running.png"),
   Biking: require("../assets/images/icons/bike.png"),
   swimming: require("../assets/images/icons/swimming.png"),

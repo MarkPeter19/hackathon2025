@@ -14,6 +14,7 @@ import CustomInput from "@/components/CustomInput";
 import RankSelector from "@/components/RankSelector";
 import DatePickerInput from "@/components/DatePickerInput";
 
+
 // Az elérhető lehetőségek és ikonok a react-native-vector-icons FontAwesome családból
 const options: Record<string, { name: string; icon: string }[]> = {
   code: [

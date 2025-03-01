@@ -15,7 +15,8 @@ namespace MePlusPlusBE.Repository
         public async Task<ICollection<Quest>?> GetDailyQuestsByPlanIds(List<int> planIds)
         {
             var quests = await _context.Quests
-                .Where(q => planIds.Contains(q.PlanId) && q.Date == DateOnly.FromDateTime(DateTime.Now))
+                //.Where(q => planIds.Contains(q.PlanId) && q.Date == DateOnly.FromDateTime(DateTime.Now))
+                .Where(q => planIds.Contains(q.PlanId))
                 .OrderBy(q => Guid.NewGuid())
                 .Take(3)
                 .ToListAsync();

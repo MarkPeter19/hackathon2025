@@ -1,6 +1,9 @@
 import React from "react";
 import { View, Text, StyleSheet, Modal } from "react-native";
 import CustomButton from "./CustomButton";
+import { useRouter } from "expo-router";
+import { updateUserXp } from "../service/Fetching";
+import { useEffect } from "react";
 
 interface CompletionModalProps {
   visible: boolean;
@@ -9,6 +12,20 @@ interface CompletionModalProps {
 }
 
 const CompletionModal: React.FC<CompletionModalProps> = ({ visible, xp, onClose }) => {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (visible && xp) {
+      // Update the user's XP when the modal becomes visible
+      const xpAmount = parseInt(xp);
+      if (!isNaN(xpAmount)) {
+        updateUserXp(4, xpAmount)
+          .then(() => console.log("XP updated successfully"))
+          .catch(error => console.error("Failed to update XP:", error));
+      }
+    }
+  }, [visible, xp]);
+
   return (
     <Modal animationType="fade" transparent={true} visible={visible}>
       <View style={styles.modalContainer}>
@@ -16,7 +33,7 @@ const CompletionModal: React.FC<CompletionModalProps> = ({ visible, xp, onClose 
           <Text style={styles.modalTitle}>🎉 Well done! 🎉</Text>
           <Text style={styles.modalText}>You have completed your practice session!</Text>
           <Text style={styles.xpText}>🏆 +{xp} XP earned</Text>
-          <CustomButton title="Go to Home" onPress={onClose} />
+          <CustomButton title="Go to Home" onPress={() => router.replace("/")} />
         </View>
       </View>
     </Modal>
