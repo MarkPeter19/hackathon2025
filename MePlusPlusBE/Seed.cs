@@ -436,26 +436,34 @@ namespace MePlusPlusBE
             if (!_context.Quests.Any())
             {
                 var quests = new List<Quest>(){
-                    {   
+
                         new Quest{
-                        Plan = _context.Plans.First(p => p.Id == 3),
+                        Plan = _context.Plans.First(p => p.Category.Name.Equals("Running")),
                         XpLevel = 20,
                         Date = DateOnly.FromDateTime(DateTime.Now),
-                        CheckQuest = _context.CheckQuests.First(cq => cq.Id == 1),
-                        IsDone = true 
+                        CheckQuest = _context.CheckQuests.First(cq=> cq.RecomendedActivity.Equals("Practice")),
+                        IsDone = false
                         }
-                    },
+                    ,
                     new Quest{
-                        Plan = _context.Plans.First(p => p.Id == 1),
+                        Plan = _context.Plans.First(p => p.Category.Name.Equals("Python")),
                         XpLevel = 10,
                         Date = DateOnly.FromDateTime(DateTime.Now),
                         CheckQuest = null,
-                        IsDone = true
+                        IsDone = false
+                        },
+                    new Quest{
+                        Plan = _context.Plans.First(p => p.Category.Name.Equals("Python")),
+                        XpLevel = 30,
+                        Date = DateOnly.FromDateTime(DateTime.Now),
+                        CheckQuest = _context.CheckQuests.First(cq => cq.Id == 15),
+                        IsDone = false
                         }
                 };
                 _context.Quests.AddRange(quests);
                 _context.SaveChanges();
             }
+            
             if (!_context.FlipCardQuizzes.Any())
             {
                 var flipCardQuizzes = new List<FlipCardQuiz>()
@@ -465,70 +473,70 @@ namespace MePlusPlusBE
                         FlipCard = _context.FlipCards.First(fc => fc.Question.Equals("What is the output of print(2+3*5)")),
                         Quest = _context.Quests.First(q => q.Plan.Equals(_context.Plans.First(p => p.Category.Name.Equals("Python")))),
                         AnsweredCorrectly = true,
-                        UserAnswer = _context.FlipCards.First(fc => fc.Id == 1).AnswerOne,
+                        UserAnswer = _context.FlipCards.First(fc => fc.Id == 38).AnswerOne,
                     },
                     new FlipCardQuiz()
                     {
                         FlipCard = _context.FlipCards.First(fc => fc.Question.Equals("What is the purpose of Python's GIL (Global Interpreter Lock)?")),
                         Quest = _context.Quests.First(q => q.Plan.Equals(_context.Plans.First(p => p.Category.Name.Equals("Python")))),
                         AnsweredCorrectly = false,
-                        UserAnswer = _context.FlipCards.First(fc => fc.Id == 2).CorrectAnswer,
+                        UserAnswer = _context.FlipCards.First(fc => fc.Id == 39).CorrectAnswer,
                     },
                     new FlipCardQuiz()
                     {
                         FlipCard = _context.FlipCards.First(fc => fc.Question.Equals("What is the result of 10 // 3 in Python?")),
                         Quest = _context.Quests.First(q => q.Plan.Equals(_context.Plans.First(p => p.Category.Name.Equals("Python")))),
                         AnsweredCorrectly = false,
-                        UserAnswer = _context.FlipCards.First(fc => fc.Id == 3).AnswerTwo,
+                        UserAnswer = _context.FlipCards.First(fc => fc.Id == 40).AnswerTwo,
                     },
                     new FlipCardQuiz()
                     {
                         FlipCard = _context.FlipCards.First(fc => fc.Question.Equals("Which keyword is used to define a function in Python?")),
                         Quest = _context.Quests.First(q => q.Plan.Equals(_context.Plans.First(p => p.Category.Name.Equals("Python")))),
                         AnsweredCorrectly = true,
-                        UserAnswer = _context.FlipCards.First(fc => fc.Id == 4).CorrectAnswer,
+                        UserAnswer = _context.FlipCards.First(fc => fc.Id == 41).CorrectAnswer,
                     },
                     new FlipCardQuiz()
                     {
                         FlipCard = _context.FlipCards.First(fc => fc.Question.Equals("How do you open a file in Python for reading?")),
                         Quest = _context.Quests.First(q => q.Plan.Equals(_context.Plans.First(p => p.Category.Name.Equals("Python")))),
                         AnsweredCorrectly = false,
-                        UserAnswer = _context.FlipCards.First(fc => fc.Id == 5).AnswerTwo,
+                        UserAnswer = _context.FlipCards.First(fc => fc.Id == 42).AnswerTwo,
                     },
                     new FlipCardQuiz()
                     {
                         FlipCard = _context.FlipCards.First(fc => fc.Question.Equals("What is the correct way to create a set in Python?")),
                         Quest = _context.Quests.First(q => q.Plan.Equals(_context.Plans.First(p => p.Category.Name.Equals("Python")))),
                         AnsweredCorrectly = true,
-                        UserAnswer = _context.FlipCards.First(fc => fc.Id == 6).CorrectAnswer,
+                        UserAnswer = _context.FlipCards.First(fc => fc.Id == 43).CorrectAnswer,
                     },
                     new FlipCardQuiz()
                     {
                         FlipCard = _context.FlipCards.First(fc => fc.Question.Equals("Which of the following is used to handle exceptions in Python?")),
                         Quest = _context.Quests.First(q => q.Plan.Equals(_context.Plans.First(p => p.Category.Name.Equals("Python")))),
                         AnsweredCorrectly = false,
-                        UserAnswer = _context.FlipCards.First(fc => fc.Id == 7).AnswerOne,
+                        UserAnswer = _context.FlipCards.First(fc => fc.Id == 44).AnswerOne,
                     },
                     new FlipCardQuiz()
                     {
                         FlipCard = _context.FlipCards.First(fc => fc.Question.Equals("What will be the output of len([1, 2, 3, 4])?")),
                         Quest = _context.Quests.First(q => q.Plan.Equals(_context.Plans.First(p => p.Category.Name.Equals("Python")))),
                         AnsweredCorrectly = true,
-                        UserAnswer = _context.FlipCards.First(fc => fc.Id == 8).CorrectAnswer,
+                        UserAnswer = _context.FlipCards.First(fc => fc.Id == 45).CorrectAnswer,
                     },
                     new FlipCardQuiz()
                     {
                         FlipCard = _context.FlipCards.First(fc => fc.Question.Equals("How do you declare a variable in Python?")),
                         Quest = _context.Quests.First(q => q.Plan.Equals(_context.Plans.First(p => p.Category.Name.Equals("Python")))),
                         AnsweredCorrectly = false,
-                        UserAnswer = _context.FlipCards.First(fc => fc.Id == 9).AnswerOne,
+                        UserAnswer = _context.FlipCards.First(fc => fc.Id == 46).AnswerOne,
                     },
                     new FlipCardQuiz()
                     {
                         FlipCard = _context.FlipCards.First(fc => fc.Question.Equals("What is the correct way to write a comment in Python?")),
                         Quest = _context.Quests.First(q => q.Plan.Equals(_context.Plans.First(p => p.Category.Name.Equals("Python")))),
                         AnsweredCorrectly = true,
-                        UserAnswer = _context.FlipCards.First(fc => fc.Id == 10).CorrectAnswer,
+                        UserAnswer = _context.FlipCards.First(fc => fc.Id == 47).CorrectAnswer,
                     },
                     
 
@@ -549,6 +557,7 @@ namespace MePlusPlusBE
             _context.FlipCards.RemoveRange(_context.FlipCards);
             _context.SaveChanges();
 
+            
             // Plans törlése
             _context.Plans.RemoveRange(_context.Plans);
             _context.SaveChanges();
@@ -571,6 +580,9 @@ namespace MePlusPlusBE
 
             // Categories törlése
             _context.Categories.RemoveRange(_context.Categories);
+            _context.SaveChanges();
+
+            _context.FlipCardCategories.RemoveRange(_context.FlipCardCategories);
             _context.SaveChanges();
 
             // Users törlése

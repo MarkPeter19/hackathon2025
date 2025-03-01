@@ -1,30 +1,29 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
-
-// Dummy kérdések és válaszok
-const quizData = [
-  {
-    question: "Ez le a kérdés amit kérdez az AI?",
-    answers: ["első válasz", "második válasz", "harmadik válasz"]
-  },
-  {
-    question: "Ez is egy kérdés?",
-    answers: ["első válasz", "második válasz", "harmadik válasz"]
-  },
-  {
-    question: "Ez is egy kérdés?",
-    answers: ["első válasz", "második válasz", "harmadik válasz"]
-  },
-];
+import React, { useEffect, useState } from "react";
+import { FlipCard, UserResponse } from "@/models/FlipCard";
+import { fetchFlipCards } from "@/service/Fetching";
+import { set } from "date-fns";
 
 export default function QuizzScreen() {
   const router = useRouter();
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
+  const [selectedAnswers, setSelectedAnswers] = useState<UserResponse[]>([]);
+  const [quizData, setQuizData] = useState<FlipCard[] | null>(null);
 
-  const handleAnswer = (index: number) => {
-    setSelectedAnswers(prevAnswers => [...prevAnswers, "temp"]);
+  useEffect(() => {
+      fetchFlipCards().then((data) => {
+          setQuizData(data);
+      });
+  }, []);
+
+  const handleAnswer = (answer: string) => {
+
+    if (!quizData) {
+      return;
+    }
+
+    setSelectedAnswers(prevAnswers => [...prevAnswers, { id: quizData[currentQuestion].id, response: answer }]);
 
     setTimeout(() => {
       if (currentQuestion < quizData.length - 1) {
@@ -34,23 +33,27 @@ export default function QuizzScreen() {
         // Here will go the API call to send the answers to the server
         // and get the results back on a new screen
       }
-    }, 1000);
+    }, 100);
   };
+
+  if (!quizData) {
+    return <Text>Loading...</Text>;
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.questionContainer}>
-        <Text style={styles.question}>{quizData[currentQuestion].question}</Text>
+        <Text style={styles.questione}>{quizData[currentQuestion].question}</Text>
       </View>
-      {quizData[currentQuestion].answers.map((answer, index) => (
-        <TouchableOpacity
-          key={index}
-          style={styles.answerButton}
-          onPress={() => handleAnswer(index)}
-        >
-          <Text style={styles.answerText}>{answer}</Text>
+        <TouchableOpacity style={styles.answerButton} onPress={() => handleAnswer(quizData[currentQuestion].answerOne)}>
+          <Text style={styles.answerText}>{quizData[currentQuestion].question}</Text>
         </TouchableOpacity>
-      ))}
+        <TouchableOpacity style={styles.answerButton} onPress={() => handleAnswer(quizData[currentQuestion].answerTwo)}>
+          <Text style={styles.answerText}>{quizData[currentQuestion].answerTwo}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.answerButton} onPress={() => handleAnswer(quizData[currentQuestion].correctAnswer)}>
+          <Text style={styles.answerText}>{quizData[currentQuestion].correctAnswer}</Text>
+        </TouchableOpacity>
     </View>
   );
 }
@@ -73,7 +76,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
   },
-  question: {
+  questione: {
     fontWeight: "bold",
     textAlign: "center",
   },
@@ -88,4 +91,5 @@ const styles = StyleSheet.create({
   answerText: {
     fontWeight: "bold",
   },
+  
 });
