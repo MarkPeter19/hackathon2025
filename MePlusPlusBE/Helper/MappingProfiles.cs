@@ -15,6 +15,7 @@ namespace MePlusPlusBE.Helper
             CreateMap<CheckQuest, CheckQuestDto>();
             CreateMap<Level, LevelDto>();
             CreateMap<FlipCard, QuizDto>();
+            CreateMap<QuizDto, FlipCard>();
             CreateMap<NewPlan, Plan>();
             CreateMap<CorrectedResponse, CorrectedResponse>();
         }
