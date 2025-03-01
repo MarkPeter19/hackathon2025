@@ -1,11 +1,23 @@
 import { View, Text, Button, StyleSheet } from "react-native";
 import CustomButton from "@/components/CustomButton";
 import { useRouter } from "expo-router";
+import { useEffect } from "react";
+import { fetchPlans } from "@/service/Fetching";
 import React from "react";
 
 
 export default function PlannerScreen() {
   const router = useRouter();
+  const url  = "";
+
+  useEffect(() => {
+    fetchPlans().then((data) => {
+      console.log(data);
+    });
+    
+  }, []);
+
+
 
   return (
     <View style={styles.container}>
