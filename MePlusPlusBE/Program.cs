@@ -1,5 +1,7 @@
 using MePlusPlusBE;
 using MePlusPlusBE.Data;
+using MePlusPlusBE.Interfaces;
+using MePlusPlusBE.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,15 +9,25 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddTransient<Seed>();
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddTransient<ICategoryRepository, CategoryRsepository>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddTransient<Seed>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+    });
+});
 var app = builder.Build();
 
 // Seed data
-if(args.Length == 1 && args[0] == "seeddata")
+if (args.Length == 1 && args[0] == "seeddata")
 {
     SeedData(app);
 }
