@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Button, BackHandler } from "react-native";
+import { View, Text, StyleSheet, AppState } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import Svg, { Circle } from "react-native-svg";
 import CustomButton from "@/components/CustomButton";
@@ -18,6 +18,7 @@ const formatTime = (seconds: number) => {
 const PracticeTimer = () => {
   const [showCompleteModal, setShowCompleteModal] = useState(false);
   const [showExitModal, setShowExitModal] = useState(false);
+  const [showFailModal, setShowFailModal] = useState(false);
   const router = useRouter();
   const {
     duration = "0",
@@ -26,46 +27,44 @@ const PracticeTimer = () => {
   } = useLocalSearchParams();
   const xpValue = Array.isArray(xp) ? xp[0] : xp.toString();
 
-  // Konvertáljuk a percben kapott `duration` értéket másodpercekké
   const timeInSeconds =
     parseInt(Array.isArray(duration) ? duration[0] : duration) * 60;
   const [timeLeft, setTimeLeft] = useState(timeInSeconds);
 
   useEffect(() => {
     if (timeLeft <= 0) {
-      setShowCompleteModal(true); // Ha az idő lejárt, mutasd a modalt
+      setShowCompleteModal(true);
       return;
     }
     const timer = setInterval(() => setTimeLeft((t) => t - 1), 1000);
     return () => clearInterval(timer);
   }, [timeLeft]);
-  
 
+  // Figyeli az alkalmazás állapotát (aktív / háttérben van)
   useEffect(() => {
-    const backAction = () => {
-      setShowExitModal(true);
-      return true;
+    const handleAppStateChange = (nextAppState: string) => {
+      if (nextAppState !== "active") {
+        setShowFailModal(true);
+      }
     };
 
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
+    const subscription = AppState.addEventListener(
+      "change",
+      handleAppStateChange
     );
-    return () => backHandler.remove();
+    return () => subscription.remove();
   }, []);
 
-  // Progress kiszámítása (0-100% közötti érték)
   const progress = (timeLeft / timeInSeconds) * 100;
   const radius = 90;
   const strokeWidth = 10;
   const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference * (1 + progress / 100); // Progress visszafelé csökken
+  const strokeDashoffset = circumference * (1 + progress / 100);
 
-  // Progress színének meghatározása dinamikusan
   const getProgressColor = () => {
-    if (progress > 50) return "#28a745"; // Zöld
-    if (progress > 25) return "#ffc107"; // Sárga
-    return "#dc3545"; // Piros
+    if (progress > 50) return "#28a745";
+    if (progress > 25) return "#ffc107";
+    return "#dc3545";
   };
 
   return (
@@ -74,10 +73,8 @@ const PracticeTimer = () => {
       <Text style={styles.description}>{description}</Text>
       <Text style={styles.xpText}>Reward: {xp} XP</Text>
 
-      {/* Circular Timer */}
       <View style={styles.timerContainer}>
         <Svg width={200} height={200} viewBox="0 0 200 200">
-          {/* Háttér kör */}
           <Circle
             cx="100"
             cy="100"
@@ -86,7 +83,6 @@ const PracticeTimer = () => {
             strokeWidth={strokeWidth}
             fill="none"
           />
-          {/* Animált progress kör */}
           <Circle
             cx="100"
             cy="100"
@@ -97,13 +93,12 @@ const PracticeTimer = () => {
             strokeDasharray={circumference}
             strokeDashoffset={strokeDashoffset}
             strokeLinecap="round"
-            transform="rotate(-90 100 100)" // Itt indul a tetején, és jobbra csökken visszafelé
+            transform="rotate(-90 100 100)"
           />
         </Svg>
         <Text style={styles.timer}>{formatTime(timeLeft)}</Text>
       </View>
 
-      {/* End Practice gomb */}
       <CustomButton
         title="End Practice"
         onPress={() => setShowExitModal(true)}
@@ -112,12 +107,18 @@ const PracticeTimer = () => {
       <CompletionModal
         visible={showCompleteModal}
         xp={xpValue}
-        onClose={() => router.push("/")}
+        onClose={() => router.replace("/")}
       />
       <ExitConfirmationModal
         visible={showExitModal}
         onCancel={() => setShowExitModal(false)}
-        onExit={() => router.push("/")}
+        onExit={() => router.replace("/")}
+      />
+      <ExitConfirmationModal
+        visible={showFailModal}
+        onCancel={() => setShowFailModal(false)}
+        onExit={() => router.replace("/")}
+        message="Practice failed. You left the screen!"
       />
     </View>
   );
@@ -135,33 +136,14 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: "bold",
     color: "#2C3E50",
-    marginBottom: 20, // Nagyobb térköz a cím alatt
-    marginTop: -40, // Cím fentebb hozva
-  },
-  descriptionContainer: {
-    alignItems: "center",
-    backgroundColor: "#ffffff",
-    padding: 15,
-    borderRadius: 12,
-    width: "85%",
     marginBottom: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
+    marginTop: -40,
   },
   description: {
     fontSize: 22,
     fontWeight: "bold",
     color: "#2C3E50",
     textAlign: "center",
-    marginBottom: 6,
-  },
-  duration: {
-    fontSize: 18,
-    color: "#7D8B97",
-    fontWeight: "500",
     marginBottom: 6,
   },
   xpText: {

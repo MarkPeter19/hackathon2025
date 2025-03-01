@@ -6,6 +6,7 @@ interface ExitConfirmationModalProps {
   visible: boolean;
   onCancel: () => void;
   onExit: () => void;
+  message?: string;
 }
 
 const ExitConfirmationModal: React.FC<ExitConfirmationModalProps> = ({
