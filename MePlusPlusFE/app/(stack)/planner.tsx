@@ -26,11 +26,6 @@ export default function PlannerScreen() {
       >
         Programming
       </Text>
-      {plans.map((plan) => {
-        if (plan.type === "Programming") {
-          return <CustomButton key={plan.id} title={plan.name}/>;
-        }
-      })}
       <CustomButton
         title="+"
         onPress={() => router.push("/(stack)/select/code")}
@@ -40,11 +35,6 @@ export default function PlannerScreen() {
       >
         Sport
       </Text>
-      {plans.map((plan) => {
-        if (plan.type === "Sport") {
-          return <CustomButton key={plan.id} title={plan.name} />;
-        }
-      })}
       <CustomButton
         title="+"
         onPress={() => router.push("/(stack)/select/sport")}

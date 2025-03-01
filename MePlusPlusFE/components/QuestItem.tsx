@@ -88,6 +88,7 @@ const QuestItem: React.FC<Props> = ({ quest }) => {
         style={[styles.container, isChecked && styles.completed]}
         onPress={() => {
           if (questType === "Practice") setModalVisible(true);
+          else if (questType === "Quiz") router.push(`/quizz`);
         }}
       >
         <View style={styles.content}>

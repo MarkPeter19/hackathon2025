@@ -41,7 +41,7 @@ const axiosGet = (url: string): Promise<any> =>
 const axiosPost = (url: string, data: unknown): Promise<any> =>
     axiosFetch({ method: 'POST', url, data });
 
-const url: string =  "https://5e92-217-73-170-83.ngrok-free.app";
+const url: string =  "https://19a5-217-73-170-83.ngrok-free.app";
 
 // GET requests
 

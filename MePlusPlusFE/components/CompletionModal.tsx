@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, Modal } from "react-native";
 import CustomButton from "./CustomButton";
+import { useRouter } from "expo-router";
 
 interface CompletionModalProps {
   visible: boolean;
@@ -9,6 +10,8 @@ interface CompletionModalProps {
 }
 
 const CompletionModal: React.FC<CompletionModalProps> = ({ visible, xp, onClose }) => {
+  const router = useRouter();
+
   return (
     <Modal animationType="fade" transparent={true} visible={visible}>
       <View style={styles.modalContainer}>
@@ -16,7 +19,7 @@ const CompletionModal: React.FC<CompletionModalProps> = ({ visible, xp, onClose 
           <Text style={styles.modalTitle}>🎉 Well done! 🎉</Text>
           <Text style={styles.modalText}>You have completed your practice session!</Text>
           <Text style={styles.xpText}>🏆 +{xp} XP earned</Text>
-          <CustomButton title="Go to Home" onPress={onClose} />
+          <CustomButton title="Go to Home" onPress={() => router.push("/")} />
         </View>
       </View>
     </Modal>
