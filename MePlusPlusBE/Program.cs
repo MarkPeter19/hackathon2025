@@ -13,6 +13,11 @@ builder.Services.AddTransient<Seed>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddTransient<ICategoryRepository, CategoryRsepository>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IQuestRepository, QuestRepository>();
+builder.Services.AddTransient<IPlanRepository, PlanRepository>();
+builder.Services.AddTransient<ICheckQuestRepository, CheckQuestRepository>();
+builder.Services.AddTransient<ILevelRepository, LevelRepository>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
