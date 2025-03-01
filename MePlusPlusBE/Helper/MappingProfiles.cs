@@ -9,6 +9,11 @@ namespace MePlusPlusBE.Helper
         public MappingProfiles()
         {
             CreateMap<Category, CategoryDto>();
+            CreateMap<Plan, PlanDto>();
+            CreateMap<Quest, QuestDto>();
+            CreateMap<User, UserDto>();
+            CreateMap<CheckQuest, CheckQuestDto>();
+            CreateMap<Level, LevelDto>();
         }
     }
 }
