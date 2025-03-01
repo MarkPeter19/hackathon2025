@@ -28,7 +28,7 @@ export default function PlannerScreen() {
       </Text>
       {plans.map((plan) => {
         if (plan.type === "Programming") {
-          return <CustomButton key={plan.id} title={plan.name} />;
+          return <CustomButton key={plan.id} title={plan.name}/>;
         }
       })}
       <CustomButton

@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { PlanIndicator } from "../models/Home";
 import { CircularProgress } from "react-native-circular-progress";
+import { useRouter } from 'expo-router';
 
 // icons
 const icons: { [key: string]: any } = {

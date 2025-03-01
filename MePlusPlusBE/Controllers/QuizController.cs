@@ -37,7 +37,7 @@ namespace MePlusPlusBE.Controllers
         [HttpPost("postUserResponses")]
         public async Task<IActionResult> PostUserResponses(ICollection<UserResponseDto> responses)
         {
-            var userResponses = _mapper.Map<CorrectedResponse>(await _quizRepository.PostUserResponses(responses));
+            var userResponses = await _quizRepository.PostUserResponses(responses);
             if (userResponses != null)
             {
                 return Ok(userResponses);

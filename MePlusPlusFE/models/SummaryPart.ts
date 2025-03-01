@@ -1,6 +1,6 @@
 export interface SummaryPartProps {
     question: string;
-    answer: string;
+    userAnswer: string;
     correctAnswer: string;
-    explanation: string;
+    // explanation: string;
 }

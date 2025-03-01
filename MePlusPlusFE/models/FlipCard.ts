@@ -7,6 +7,6 @@ export interface FlipCard {
 }
 
 export interface UserResponse {
-    id: number;
-    response: string;
+    flipCardId: number;
+    userAnswer: string;
 }

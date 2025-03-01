@@ -13,6 +13,7 @@ export default function QuizzScreen() {
 
   useEffect(() => {
       fetchFlipCards().then((data) => {
+          console.log(data);
           setQuizData(data);
       });
   }, []);
@@ -23,13 +24,16 @@ export default function QuizzScreen() {
       return;
     }
 
-    setSelectedAnswers(prevAnswers => [...prevAnswers, { id: quizData[currentQuestion].id, response: answer }]);
+    setSelectedAnswers(prevAnswers => [...prevAnswers, { flipCardId: quizData[currentQuestion].id, userAnswer: answer }]);
 
     setTimeout(() => {
       if (currentQuestion < quizData.length - 1) {
         setCurrentQuestion(currentQuestion + 1);
       } else {
-        router.push({pathname: "/(stack)/summary",});
+        router.push({
+          pathname: "/(stack)/summary",
+          params: { answers: JSON.stringify(selectedAnswers) },
+        });
         // Here will go the API call to send the answers to the server
         // and get the results back on a new screen
       }
