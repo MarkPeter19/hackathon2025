@@ -21,5 +21,23 @@ namespace MePlusPlusBE.Repository
             }
             return null;
         }
+
+        public Task<bool> UpdateQuestDone(int questId)
+        {
+            var quest = _context.Quests.Where(q => q.Id == questId).FirstOrDefault();
+            quest.IsDone = !quest.IsDone;
+            _context.Update(quest);
+            return Save();
+        }
+
+        public async Task<bool> Save()
+        {
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public Task<Quest?> GetQuestById(int questId)
+        {
+            return _context.Quests.Where(q => q.Id == questId).FirstOrDefaultAsync();
+        }
     }
 }
