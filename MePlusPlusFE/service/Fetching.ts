@@ -1,3 +1,4 @@
+import { UserResponse } from '@/models/FlipCard';
 import axios from 'axios';
 
 interface AxiosFetchParams {
@@ -40,7 +41,8 @@ const axiosGet = (url: string): Promise<any> =>
 const axiosPost = (url: string, data: unknown): Promise<any> =>
     axiosFetch({ method: 'POST', url, data });
 
-const url: string =  "https://5e92-217-73-170-83.ngrok-free.app"
+const url: string =  "https://5e92-217-73-170-83.ngrok-free.app";
+
 // GET requests
 
 export function fetchPlans() : Promise<any> {
@@ -52,7 +54,11 @@ export function fetchHome() : Promise<any> {
 }
 
 export function fetchFlipCards() : Promise<any> {
-    return axiosGet(`${url}/api/Quiz/getFlipCardsByCategory?categoryId=1`);
+    return axiosGet(`${url}/api/Quiz/getFlipCardsByCategory?categoryId=34`);
+}
+
+export function postQuizAnswers(answers: UserResponse[]): Promise<any> {
+    return axiosPost(`${url}/api/Quiz/postUserResponses`, answers);
 }
 
 
