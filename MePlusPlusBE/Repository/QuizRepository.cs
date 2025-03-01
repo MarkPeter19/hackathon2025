@@ -41,6 +41,7 @@ namespace MePlusPlusBE.Repository
             }
 
             var correctedResponses = new List<CorrectedResponse>();
+            var correct_answers = 0;
             foreach (var response in responses)
             {
                 var flipCard = await _context.FlipCards
@@ -54,10 +55,29 @@ namespace MePlusPlusBE.Repository
                         UserAnswer = response.UserAnswer,
                         CorrectAnswer = flipCard.CorrectAnswer,
                     });
+
+                    if (response.UserAnswer == flipCard.CorrectAnswer) correct_answers++;
                 }
             }
 
-            return correctedResponses;
+            var user = await _context.Users.Where(u => u.Email == "test@gmail.com").FirstOrDefaultAsync();
+
+            user.XpLevel += correct_answers;
+            _context.Update(user);
+
+            if (await Save() == true)
+            {
+                return correctedResponses;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<bool> Save()
+        {
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 }
