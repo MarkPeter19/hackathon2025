@@ -3,13 +3,17 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { Quest } from "../models/Home";
 import Checkbox from "expo-checkbox";
 
-// load icons
+// Ikonok betöltése
 const icons: { [key: string]: any } = {
-  activity: require("../assets/images/icons/activity.png"),
   quiz: require("../assets/images/icons/quiz.png"),
   code: require("../assets/images/icons/code.png"),
+  activity: require("../assets/images/icons/activity.png"),
   default: require("../assets/images/icons/default.png"),
 };
+
+// Programozási és sport kategóriák
+const programmingCategories = ["Python", "Flutter", "Java", "React Native", "React", "NodeJs", "Android"];
+const sportCategories = ["Running", "Swimming", "Cycling", "Football"];
 
 interface Props {
   quest: Quest;
@@ -18,29 +22,37 @@ interface Props {
 const QuestItem: React.FC<Props> = ({ quest }) => {
   const [isChecked, setChecked] = useState(quest.isDone);
 
-  // Quest name and descrpition
+  // A kategória neve kisbetűssé alakítva (normalizálás)
+  const categoryName = quest.categoryName.toLowerCase();
+
+  // Quest típus meghatározása
+  let questType = "Practice";
+  let iconSource = icons.default;
+
+  if (quest.checkQuestId === null) {
+    questType = "Quiz";
+    iconSource = icons.quiz;
+  } else if (programmingCategories.includes(quest.categoryName)) {
+    questType = "Practice";
+    iconSource = icons.code;
+  } else if (sportCategories.includes(quest.categoryName)) {
+    questType = "Sport";
+    iconSource = icons.activity;
+  }
+
+  // Quest neve és leírása
   const questName =
     quest.checkQuestId === null
-      ? "10 Flash Cards"
+      ? "Quiz"
       : `${quest.checkQuest?.recomendedActivity} ${quest.checkQuest?.mesure}`;
-
-  // Select icon
-  const iconSource =
-    questName.toLowerCase().includes("flash")
-      ? icons.quiz
-      : questName.toLowerCase().includes("run")
-      ? icons.activity
-      : questName.toLowerCase().includes("code")
-      ? icons.code
-      : icons.default;
 
   return (
     <TouchableOpacity style={[styles.container, isChecked && styles.completed]}>
       <View style={styles.content}>
-        {/* Icon */}
+        {/* Ikon megjelenítése */}
         <Image source={iconSource} style={styles.icon} />
 
-        {/* text and xp */}
+        {/* Szöveg és XP érték */}
         <View style={styles.textContainer}>
           <Text style={styles.text}>{questName}</Text>
           <Text style={styles.xpText}>{quest.xpLevel} XP</Text>

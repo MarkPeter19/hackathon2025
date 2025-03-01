@@ -28,6 +28,8 @@ export interface User {
   }
   
   export interface Quest {
+    categoryName: string;
+    categoryId: number;
     id: number;
     xpLevel: number;
     date: string;

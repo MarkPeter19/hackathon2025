@@ -6,6 +6,7 @@ import { fetchHome } from "../../service/Fetching"
 import { HomeData } from "../../models/Home";
 import PlanProgress from "../../components/PlanProgress";
 import QuestItem from "../../components/QuestItem";
+import QuestList from "@/components/QuestList";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -64,12 +65,8 @@ export default function HomeScreen() {
       />
 
       {/* Quests megjelenítése */}
-      <FlatList
-        data={quests}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <QuestItem quest={item} />}
-        contentContainerStyle={styles.questsContainer}
-      />
+<QuestList quests={quests} />
+
 
       {/* Make a Plan gomb */}
       <CustomButton title="Make a Plan" onPress={() => router.push("/(stack)/planner")} />
