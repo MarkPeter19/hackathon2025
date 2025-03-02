@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Modal } from "react-native";
 import CustomButton from "./CustomButton";
 import { useRouter } from "expo-router";
-import { useHome } from "../context/HomeContext"; // Hozzáadva a globális állapotkezelés
+import { useHome } from "../context/HomeContext";
 
 interface CompletionModalProps {
   visible: boolean;
@@ -16,7 +16,7 @@ const CompletionModal: React.FC<CompletionModalProps> = ({
   onClose,
 }) => {
   const router = useRouter();
-  const { refreshHomeData } = useHome(); // Hozzáadva a frissítés funkciót
+  const { refreshHomeData } = useHome();
 
   return (
     <Modal animationType="fade" transparent={true} visible={visible}>
@@ -30,7 +30,7 @@ const CompletionModal: React.FC<CompletionModalProps> = ({
           <CustomButton
             title="Go to Home"
             onPress={() => {
-              refreshHomeData(); // Home adatokat frissítjük!
+              refreshHomeData();
               onClose();
               router.replace("/");
             }}

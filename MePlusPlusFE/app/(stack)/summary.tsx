@@ -5,14 +5,14 @@ import CustomButton from "@/components/CustomButton";
 import SummaryPart from "@/components/SummaryPart";
 import { SummaryPartProps } from "@/models/SummaryPart";
 import { postQuizAnswers } from "@/service/Fetching";
-import CompletionModal from "@/components/CompletionModal"; // 🔹 Importáljuk a CompletionModal-t
+import CompletionModal from "@/components/CompletionModal"; 
 
 export default function SummaryScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const [summary, setSummary] = useState<SummaryPartProps[]>([]);
   const [loading, setLoading] = useState(false);
-  const [showCompletionModal, setShowCompletionModal] = useState(false); // 🔹 Új state változó a modal megjelenítéséhez
+  const [showCompletionModal, setShowCompletionModal] = useState(false); 
 
   useEffect(() => {
     if (params.answers) {
@@ -65,10 +65,9 @@ export default function SummaryScreen() {
       {/* 🔹 CompletionModal */}
       <CompletionModal
         visible={showCompletionModal}
-        //xp="50" // 🔹 XP érték (módosítható)
         onClose={() => {
           setShowCompletionModal(false);
-          router.push("/"); // 🔹 Modal bezárása után navigál a Home-ra
+          router.push("/"); 
         }}
       />
 
