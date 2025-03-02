@@ -9,8 +9,6 @@ import {
 import { useRouter } from "expo-router";
 import CustomButton from "../../components/CustomButton";
 import React, { useEffect, useState } from "react";
-import { fetchHome } from "../../service/Fetching";
-import { HomeData } from "../../models/Home";
 import PlanProgress from "../../components/PlanProgress";
 import QuestList from "@/components/QuestList";
 import { CircularProgress } from "react-native-circular-progress";
@@ -19,8 +17,6 @@ import { useHome } from "../../context/HomeContext";
 export default function HomeScreen() {
   const router = useRouter();
   const { homeData, loading, refreshHomeData } = useHome(); 
-  // const [homeData, setHomeData] = useState<HomeData | null>(null);
-  //const [loading, setLoading] = useState(true);
 
   if (loading) {
     return (
@@ -37,20 +33,6 @@ export default function HomeScreen() {
       </View>
     );
   }
-
-  // useEffect(() => {
-  //   fetchHome()
-  //     .then((data) => {
-  //       setHomeData(data);
-  //       setLoading(false);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching home data:", error);
-  //       setLoading(false);
-  //     });
-  // }, []);
-
-
 
   const { user, plans, quests } = homeData;
   const base_image_url =

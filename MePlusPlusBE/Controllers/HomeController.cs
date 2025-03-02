@@ -43,7 +43,7 @@ namespace MePlusPlusBE.Controllers
                 CategoryDto categoryDto = _mapper.Map<CategoryDto>(await _categoryRepository.GetCategoryById(plan.CategoryId));
                 plan.CategoryName = categoryDto.Name;
             }
-     
+
             var quests = _mapper.Map<List<QuestDto>>(await _questRepository.GetDailyQuestsByPlanIds(planIds));
             foreach(var quest in quests) {
                 CategoryDto categoryDto = _mapper.Map<CategoryDto>(await _planRepository.GetCategoryByPlanId(quest.PlanId));
@@ -55,6 +55,7 @@ namespace MePlusPlusBE.Controllers
                     quest.CheckQuest = _mapper.Map<CheckQuestDto>(await _checkQuestRepository.GetCheckQuestById(checkQuestId));
                 }
             }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
