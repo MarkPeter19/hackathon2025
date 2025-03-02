@@ -1,28 +1,28 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import CustomButton from "@/components/CustomButton";
 import SummaryPart from "@/components/SummaryPart";
 import { SummaryPartProps } from "@/models/SummaryPart";
-import { useState, useEffect } from "react";
 import { postQuizAnswers } from "@/service/Fetching";
-
+import CompletionModal from "@/components/CompletionModal"; 
 
 export default function SummaryScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
-  const [summary, setSummary] = useState<SummaryPartProps[]>([]); // Start with dummy data
+  const [summary, setSummary] = useState<SummaryPartProps[]>([]);
   const [loading, setLoading] = useState(false);
+  const [showCompletionModal, setShowCompletionModal] = useState(false); 
 
   useEffect(() => {
     if (params.answers) {
-      console.log(params.answers)
+      console.log(params.answers);
       setLoading(true);
       try {
         const userAnswers = JSON.parse(params.answers as string);
         postQuizAnswers(userAnswers)
           .then((response: React.SetStateAction<SummaryPartProps[]>) => {
-            setSummary(response); // Replace dummy data with API response
+            setSummary(response);
             setLoading(false);
           })
           .catch((error: any) => {
@@ -44,8 +44,6 @@ export default function SummaryScreen() {
     );
   }
 
-
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Summary</Text>
@@ -60,12 +58,21 @@ export default function SummaryScreen() {
             question={one_summary.question}
             userAnswer={one_summary.userAnswer}
             correctAnswer={one_summary.correctAnswer}
-            // explanation={quizData.explanation}
           />
         ))}
       </ScrollView>
+
+      {/* 🔹 CompletionModal */}
+      <CompletionModal
+        visible={showCompletionModal}
+        onClose={() => {
+          setShowCompletionModal(false);
+          router.push("/"); 
+        }}
+      />
+
       <View style={styles.buttonContainer}>
-        <CustomButton title="Back to Home" onPress={() => router.push("/")} />
+        <CustomButton title="Back to Home" onPress={() => setShowCompletionModal(true)} />
       </View>
     </View>
   );
@@ -97,3 +104,4 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+
