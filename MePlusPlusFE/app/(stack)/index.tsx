@@ -65,6 +65,10 @@ export default function HomeScreen() {
         </View>
       </View>
 
+
+      {/* Show Leaderboard gomb */}
+      {/* <CustomButton title="Show Leaderboard" onPress={() => router.push("/leaderboard")} /> */}
+
       {/* Plans megjelenítése */}
       <FlatList
         horizontal
