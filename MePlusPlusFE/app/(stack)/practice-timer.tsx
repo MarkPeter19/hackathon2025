@@ -6,13 +6,16 @@ import CustomButton from "@/components/CustomButton";
 import CompletionModal from "@/components/CompletionModal";
 import ExitConfirmationModal from "@/components/ExitModal";
 
+// Assume updateUserXp is imported from your API utility
+import { updateUserXp } from "@/service/Fetching";
+
 const formatTime = (seconds: number) => {
   const h = Math.floor(seconds / 3600);
   const m = Math.floor((seconds % 3600) / 60);
   const s = seconds % 60;
-  return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}:${s
+  return `${h.toString().padStart(2, "0")}:${m
     .toString()
-    .padStart(2, "0")}`;
+    .padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
 };
 
 const PracticeTimer = () => {
@@ -26,20 +29,27 @@ const PracticeTimer = () => {
   } = useLocalSearchParams();
   const xpValue = Array.isArray(xp) ? xp[0] : xp.toString();
 
-  // Konvertáljuk a percben kapott `duration` értéket másodpercekké
-  const timeInSeconds =
-    parseInt(Array.isArray(duration) ? duration[0] : duration) * 60;
+  // Convert duration (in minutes) to seconds
+  const timeInSeconds = parseInt(Array.isArray(duration) ? duration[0] : duration) * 60;
   const [timeLeft, setTimeLeft] = useState(timeInSeconds);
 
   useEffect(() => {
-    if (timeLeft <= 0) {
-      setShowCompleteModal(true); // Ha az idő lejárt, mutasd a modalt
+    if (timeLeft <= 1) {
+      // Call endpoint when timer hits 0
+      console.log(xpValue);
+      const xpAmount = parseInt(xpValue);
+      console.log(xpAmount);
+      if (!isNaN(xpAmount)) {
+        updateUserXp(4, xpAmount)
+          .then(() => console.log("XP updated successfully"))
+          // .catch(error => console.error("Failed to update XP:", error));
+      }
+      setShowCompleteModal(true); // Show complete modal
       return;
     }
     const timer = setInterval(() => setTimeLeft((t) => t - 1), 1000);
     return () => clearInterval(timer);
   }, [timeLeft]);
-  
 
   useEffect(() => {
     const backAction = () => {
@@ -47,25 +57,21 @@ const PracticeTimer = () => {
       return true;
     };
 
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
+    const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
     return () => backHandler.remove();
   }, []);
 
-  // Progress kiszámítása (0-100% közötti érték)
+  // Calculate progress (in percentage)
   const progress = (timeLeft / timeInSeconds) * 100;
   const radius = 90;
   const strokeWidth = 10;
   const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference * (1 + progress / 100); // Progress visszafelé csökken
+  const strokeDashoffset = circumference * (1 + progress / 100);
 
-  // Progress színének meghatározása dinamikusan
   const getProgressColor = () => {
-    if (progress > 50) return "#28a745"; // Zöld
-    if (progress > 25) return "#ffc107"; // Sárga
-    return "#dc3545"; // Piros
+    if (progress > 50) return "#28a745";
+    if (progress > 25) return "#ffc107";
+    return "#dc3545";
   };
 
   return (
@@ -74,10 +80,8 @@ const PracticeTimer = () => {
       <Text style={styles.description}>{description}</Text>
       <Text style={styles.xpText}>Reward: {xp} XP</Text>
 
-      {/* Circular Timer */}
       <View style={styles.timerContainer}>
         <Svg width={200} height={200} viewBox="0 0 200 200">
-          {/* Háttér kör */}
           <Circle
             cx="100"
             cy="100"
@@ -86,7 +90,6 @@ const PracticeTimer = () => {
             strokeWidth={strokeWidth}
             fill="none"
           />
-          {/* Animált progress kör */}
           <Circle
             cx="100"
             cy="100"
@@ -97,13 +100,12 @@ const PracticeTimer = () => {
             strokeDasharray={circumference}
             strokeDashoffset={strokeDashoffset}
             strokeLinecap="round"
-            transform="rotate(-90 100 100)" // Itt indul a tetején, és jobbra csökken visszafelé
+            transform="rotate(-90 100 100)"
           />
         </Svg>
         <Text style={styles.timer}>{formatTime(timeLeft)}</Text>
       </View>
 
-      {/* End Practice gomb */}
       <CustomButton
         title="End Practice"
         onPress={() => setShowExitModal(true)}
@@ -135,8 +137,8 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: "bold",
     color: "#2C3E50",
-    marginBottom: 20, // Nagyobb térköz a cím alatt
-    marginTop: -40, // Cím fentebb hozva
+    marginBottom: 20,
+    marginTop: -40,
   },
   descriptionContainer: {
     alignItems: "center",

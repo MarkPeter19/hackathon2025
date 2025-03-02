@@ -44,7 +44,7 @@ const axiosPost = (url: string, data: unknown): Promise<any> =>
 const axiosPut = (url: string, data: unknown): Promise<any> =>
     axiosFetch({ method: 'PUT', url, data });
 
-const url: string =  "https://fd62-217-73-170-83.ngrok-free.app";
+const url: string =  "https://ac81-217-73-170-83.ngrok-free.app";
 
 // GET requests
 
@@ -65,7 +65,7 @@ export function postQuizAnswers(answers: UserResponse[]): Promise<any> {
 }
 
 export function updateUserXp(userId: number, xpAmount: number): Promise<any> {
-    return axiosPut(`${url}/api/Quest/updateUserXp?userId=${userId}&xpAmount${xpAmount}`, null);
+    return axiosPut(`${url}/api/Quest/updateUserXp?userId=${userId}&xpAmount=${xpAmount}`, null);
 }
 
 

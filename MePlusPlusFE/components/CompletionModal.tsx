@@ -14,18 +14,6 @@ interface CompletionModalProps {
 const CompletionModal: React.FC<CompletionModalProps> = ({ visible, xp, onClose }) => {
   const router = useRouter();
 
-  useEffect(() => {
-    if (visible && xp) {
-      // Update the user's XP when the modal becomes visible
-      const xpAmount = parseInt(xp);
-      if (!isNaN(xpAmount)) {
-        updateUserXp(4, xpAmount)
-          .then(() => console.log("XP updated successfully"))
-          .catch(error => console.error("Failed to update XP:", error));
-      }
-    }
-  }, [visible, xp]);
-
   return (
     <Modal animationType="fade" transparent={true} visible={visible}>
       <View style={styles.modalContainer}>

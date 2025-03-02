@@ -108,6 +108,7 @@ const QuestItem: React.FC<Props> = ({ quest }) => {
           value={isChecked}
           onValueChange={setChecked}
           color={isChecked ? "#4CAF50" : "#FFF"}
+          
         />
       </TouchableOpacity>
 
