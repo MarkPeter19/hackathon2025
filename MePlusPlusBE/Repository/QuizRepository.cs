@@ -74,6 +74,8 @@ namespace MePlusPlusBE.Repository
 
             var user = await _context.Users.Where(u => u.Email == "test@gmail.com").FirstOrDefaultAsync();
 
+            CompleteTodaysQuest();
+
             user.XpLevel += correct_answers;
             _context.Update(user);
 
@@ -90,6 +92,24 @@ namespace MePlusPlusBE.Repository
         public async Task<bool> Save()
         {
             return await _context.SaveChangesAsync() > 0;
+        }
+
+
+        public async Task<bool> CompleteTodaysQuest()
+        {
+            var today = DateOnly.FromDateTime(DateTime.Today);
+            var quest = await _context.Quests
+                .Where(q => q.CheckQuestId == null && q.Date == today)
+                .FirstOrDefaultAsync();
+
+            if (quest != null)
+            {
+                quest.IsDone = true;
+                _context.Update(quest);
+                return await Save();
+            }
+
+            return false;
         }
     }
 }
