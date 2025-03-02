@@ -3,7 +3,6 @@ import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { FlipCard, UserResponse } from "@/models/FlipCard";
 import { fetchFlipCards } from "@/service/Fetching";
-import { set } from "date-fns";
 
 export default function QuizzScreen() {
   const router = useRouter();

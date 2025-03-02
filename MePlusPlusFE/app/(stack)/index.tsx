@@ -1,37 +1,15 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  ActivityIndicator,
-  FlatList,
-} from "react-native";
+import { View, Text, StyleSheet, Image, ActivityIndicator, FlatList } from "react-native";
 import { useRouter } from "expo-router";
 import CustomButton from "../../components/CustomButton";
-import React, { useEffect, useState } from "react";
-import { fetchHome } from "../../service/Fetching";
-import { HomeData } from "../../models/Home";
+import React from "react";
 import PlanProgress from "../../components/PlanProgress";
 import QuestList from "@/components/QuestList";
-import QuestItem from "@/components/QuestItem";
 import { CircularProgress } from "react-native-circular-progress";
+import { useHome } from "../../context/HomeContext"; // Importáljuk a globális contextet
 
 export default function HomeScreen() {
   const router = useRouter();
-  const [homeData, setHomeData] = useState<HomeData | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchHome()
-      .then((data) => {
-        setHomeData(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching home data:", error);
-        setLoading(false);
-      });
-  }, []);
+  const { homeData, loading } = useHome(); // Itt használjuk a contextet
 
   if (loading) {
     return (
@@ -50,16 +28,10 @@ export default function HomeScreen() {
   }
 
   const { user, plans, quests } = homeData;
-  const base_image_url =
-    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
-  
-  // Calculate user XP percentage for the progress circle
-  // Assuming XP level is between 0 and 100, adjust as needed
-  const userXpPercentage = user.xpLevel / 1000;
+  const base_image_url = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 
   return (
     <View style={styles.container}>
-      {/* Felhasználói információk */}
       <View style={styles.header_container}>
         <View style={styles.profileContainer}>
           <CircularProgress
@@ -72,14 +44,11 @@ export default function HomeScreen() {
           <Image source={{ uri: base_image_url }} style={styles.profileImage} />
         </View>
         <View>
-          <Text style={styles.title}>
-            Welcome {user.firstName} {user.lastName}
-          </Text>
+          <Text style={styles.title}>Welcome {user.firstName} {user.lastName}</Text>
           <Text style={styles.xpText}>XP Level: {user.xpLevel}</Text>
         </View>
       </View>
 
-      {/* Plans megjelenítése */}
       <FlatList
         horizontal
         data={plans}
@@ -88,14 +57,9 @@ export default function HomeScreen() {
         contentContainerStyle={styles.plansContainer}
       />
 
-      {/* Quests megjelenítése */}
       <QuestList quests={quests} />
 
-      {/* Make a Plan gomb */}
-      <CustomButton
-        title="Make a Plan"
-        onPress={() => router.push("/(stack)/planner")}
-      />
+      <CustomButton title="Make a Plan" onPress={() => router.push("/(stack)/planner")} />
     </View>
   );
 }
@@ -113,20 +77,20 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingVertical: 20,
   },
-  profileContainer: {
+  profileContainer: {  // Itt hozzuk létre ezt a hiányzó stílust!
     position: "relative",
     justifyContent: "center",
     alignItems: "center",
     marginRight: 10,
   },
   profileImage: {
-    position: "absolute",
-    width: 45,
-    height: 45,
+    width: 50,
+    height: 50,
     borderRadius: 50,
+    marginRight: 10,
   },
   title: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: "bold",
   },
   xpText: {
