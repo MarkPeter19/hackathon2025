@@ -33,7 +33,10 @@ const PracticeTimer = () => {
     let timer: NodeJS.Timeout;
     if (timeLeft > 0 && appActive) {
       timer = setInterval(() => setTimeLeft((t) => t - 1), 1000);
-    } else if (timeLeft <= 0) {
+    } else if (timeLeft <= 1) {
+      updateUserXp(4, Math.round(parseInt(xpValue) / 2))
+        .then(() => console.log("XP updated successfully"))
+        .catch((error) => console.error("Failed to update XP:", error));
       setShowCompleteModal(true);
     }
     return () => clearInterval(timer);

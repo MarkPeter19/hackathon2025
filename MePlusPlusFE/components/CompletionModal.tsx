@@ -20,19 +20,19 @@ const CompletionModal: React.FC<CompletionModalProps> = ({
   const { refreshHomeData } = useHome(); // Hozzáadva a frissítés funkciót
   const [xpUpdated, setXpUpdated] = useState(false);
 
-  useEffect(() => {
-    if (visible && xp && !xpUpdated) {
-      const xpAmount = parseInt(xp);
-      if (!isNaN(xpAmount)) {
-        updateUserXp(4, xpAmount)
-          .then(() => {
-            console.log("XP updated successfully");
-            setXpUpdated(true);
-          })
-          .catch((error) => console.error("Failed to update XP:", error));
-      }
-    }
-  }, [visible, xp, xpUpdated]);
+  // useEffect(() => {
+  //   if (visible && xp && !xpUpdated) {
+  //     const xpAmount = parseInt(xp);
+  //     if (!isNaN(xpAmount)) {
+  //       updateUserXp(4, xpAmount)
+  //         .then(() => {
+  //           console.log("XP updated successfully");
+  //           setXpUpdated(true);
+  //         })
+  //         .catch((error) => console.error("Failed to update XP:", error));
+  //     }
+  //   }
+  // }, [visible, xp, xpUpdated]);
 
   return (
     <Modal animationType="fade" transparent={true} visible={visible}>

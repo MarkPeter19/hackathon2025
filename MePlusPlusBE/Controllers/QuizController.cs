@@ -88,8 +88,8 @@ namespace MePlusPlusBE.Controllers
                         var flipcards = _mapper.Map<ICollection<FlipCard>>(generatedQuizzes);
                         foreach (var item in flipcards)
                         {
-                            item.FlipCardCategoryId = 1;
-                            item.FlipCardLevelId = 1;
+                            item.FlipCardCategoryId = 23;
+                            item.FlipCardLevelId = 16;
                         }
                         List<int> ids = await _quizRepository.AddFlipCards(flipcards);
 
