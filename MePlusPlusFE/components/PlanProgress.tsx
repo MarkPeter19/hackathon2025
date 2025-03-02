@@ -53,6 +53,7 @@ const PlanProgress: React.FC<Props> = ({ plan }) => {
           fill={progressPercentage}
           tintColor="#4CAF50"
           backgroundColor="#e0e0e0"
+          rotation={0}
         />
         {/* Ikon megjelenítése a kör közepén */}
         <Image source={iconSource} style={styles.icon} />

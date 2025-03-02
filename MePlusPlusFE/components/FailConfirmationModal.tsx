@@ -2,29 +2,24 @@ import React from "react";
 import { View, Text, StyleSheet, Modal } from "react-native";
 import CustomButton from "./CustomButton";
 
-interface ExitConfirmationModalProps {
+interface FailConfirmationModalProps {
   visible: boolean;
-  onCancel: () => void;
   onExit: () => void;
-  message?: string;
+  message: string;
 }
 
-const ExitConfirmationModal: React.FC<ExitConfirmationModalProps> = ({
+const FailConfirmationModal: React.FC<FailConfirmationModalProps> = ({
   visible,
-  onCancel,
   onExit,
+  message,
 }) => {
   return (
     <Modal animationType="fade" transparent={true} visible={visible}>
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>⚠️ Are you sure?</Text>
-          <Text style={styles.modalText}>
-            Leaving now will cancel your progress.
-          </Text>
-          {/* Gombok */}
+          <Text style={styles.modalTitle}>You exited!</Text>
+          <Text style={styles.modalText}>{message}</Text>
           <View style={styles.buttonContainer}>
-            <CustomButton title="Continue Practice" onPress={onCancel} />
             <CustomButton title="Exit" onPress={onExit} />
           </View>
         </View>
@@ -42,7 +37,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: "65%",
-    height: "40%",
+    height: "30%",
     padding: 25,
     backgroundColor: "#ffffff",
     borderRadius: 15,
@@ -73,4 +68,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ExitConfirmationModal;
+export default FailConfirmationModal;

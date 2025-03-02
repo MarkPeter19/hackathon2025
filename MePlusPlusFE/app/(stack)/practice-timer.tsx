@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Button, BackHandler } from "react-native";
+import { View, Text, StyleSheet, AppState } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import Svg, { Circle } from "react-native-svg";
 import CustomButton from "@/components/CustomButton";
@@ -8,60 +8,52 @@ import ExitConfirmationModal from "@/components/ExitModal";
 
 // Assume updateUserXp is imported from your API utility
 import { updateUserXp } from "@/service/Fetching";
+import FailConfirmationModal from "@/components/FailConfirmationModal";
 
 const formatTime = (seconds: number) => {
   const h = Math.floor(seconds / 3600);
   const m = Math.floor((seconds % 3600) / 60);
   const s = seconds % 60;
-  return `${h.toString().padStart(2, "0")}:${m
-    .toString()
-    .padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+  return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
 };
 
 const PracticeTimer = () => {
   const [showCompleteModal, setShowCompleteModal] = useState(false);
   const [showExitModal, setShowExitModal] = useState(false);
+  const [showFailModal, setShowFailModal] = useState(false);
   const router = useRouter();
-  const {
-    duration = "0",
-    description = "Unknown",
-    xp = "0",
-  } = useLocalSearchParams();
+  const { duration = "0", description = "Unknown", xp = "0" } = useLocalSearchParams();
   const xpValue = Array.isArray(xp) ? xp[0] : xp.toString();
 
-  // Convert duration (in minutes) to seconds
   const timeInSeconds = parseInt(Array.isArray(duration) ? duration[0] : duration) * 60;
   const [timeLeft, setTimeLeft] = useState(timeInSeconds);
+  const [appActive, setAppActive] = useState(true);
 
   useEffect(() => {
-    if (timeLeft <= 1) {
-      // Call endpoint when timer hits 0
-      console.log(xpValue);
-      const xpAmount = parseInt(xpValue);
-      console.log(xpAmount);
-      if (!isNaN(xpAmount)) {
-        updateUserXp(4, xpAmount)
-          .then(() => console.log("XP updated successfully"))
-          // .catch(error => console.error("Failed to update XP:", error));
-      }
-      setShowCompleteModal(true); // Show complete modal
-      return;
+    let timer: NodeJS.Timeout;
+    if (timeLeft > 0 && appActive) {
+      timer = setInterval(() => setTimeLeft((t) => t - 1), 1000);
+    } else if (timeLeft <= 0) {
+      setShowCompleteModal(true);
     }
-    const timer = setInterval(() => setTimeLeft((t) => t - 1), 1000);
     return () => clearInterval(timer);
-  }, [timeLeft]);
+  }, [timeLeft, appActive]);
 
+  // Figyeli az alkalmazás állapotát (aktív / háttérben van)
   useEffect(() => {
-    const backAction = () => {
-      setShowExitModal(true);
-      return true;
+    const handleAppStateChange = (nextAppState: string) => {
+      if (nextAppState !== "active") {
+        setAppActive(false);
+        setShowFailModal(true);
+      } else {
+        setAppActive(true);
+      }
     };
 
-    const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
-    return () => backHandler.remove();
+    const subscription = AppState.addEventListener("change", handleAppStateChange);
+    return () => subscription.remove();
   }, []);
 
-  // Calculate progress (in percentage)
   const progress = (timeLeft / timeInSeconds) * 100;
   const radius = 90;
   const strokeWidth = 10;
@@ -82,14 +74,7 @@ const PracticeTimer = () => {
 
       <View style={styles.timerContainer}>
         <Svg width={200} height={200} viewBox="0 0 200 200">
-          <Circle
-            cx="100"
-            cy="100"
-            r={radius}
-            stroke="#e0e0e0"
-            strokeWidth={strokeWidth}
-            fill="none"
-          />
+          <Circle cx="100" cy="100" r={radius} stroke="#e0e0e0" strokeWidth={strokeWidth} fill="none" />
           <Circle
             cx="100"
             cy="100"
@@ -106,21 +91,11 @@ const PracticeTimer = () => {
         <Text style={styles.timer}>{formatTime(timeLeft)}</Text>
       </View>
 
-      <CustomButton
-        title="End Practice"
-        onPress={() => setShowExitModal(true)}
-      />
+      <CustomButton title="End Practice" onPress={() => setShowExitModal(true)} />
 
-      <CompletionModal
-        visible={showCompleteModal}
-        xp={xpValue}
-        onClose={() => router.replace("/")}
-      />
-      <ExitConfirmationModal
-        visible={showExitModal}
-        onCancel={() => setShowExitModal(false)}
-        onExit={() => router.replace("/")}
-      />
+      <CompletionModal visible={showCompleteModal} xp={xpValue} onClose={() => router.replace("/")} />
+      <ExitConfirmationModal visible={showExitModal} onCancel={() => setShowExitModal(false)} onExit={() => router.replace("/")} />
+      <FailConfirmationModal visible={showFailModal} onExit={() => router.replace("/")} message="Practice failed. You left the screen!" />
     </View>
   );
 };
@@ -140,30 +115,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: -40,
   },
-  descriptionContainer: {
-    alignItems: "center",
-    backgroundColor: "#ffffff",
-    padding: 15,
-    borderRadius: 12,
-    width: "85%",
-    marginBottom: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
-  },
   description: {
     fontSize: 22,
     fontWeight: "bold",
     color: "#2C3E50",
     textAlign: "center",
-    marginBottom: 6,
-  },
-  duration: {
-    fontSize: 18,
-    color: "#7D8B97",
-    fontWeight: "500",
     marginBottom: 6,
   },
   xpText: {
