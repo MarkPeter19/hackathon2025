@@ -74,7 +74,7 @@ namespace MePlusPlusBE.Repository
 
             var user = await _context.Users.Where(u => u.Email == "test@gmail.com").FirstOrDefaultAsync();
 
-            CompleteTodaysQuest();
+            await CompleteTodaysQuest();
 
             user.XpLevel += correct_answers;
             _context.Update(user);
