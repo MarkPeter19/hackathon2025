@@ -5,6 +5,7 @@ import {
   Image,
   ActivityIndicator,
   FlatList,
+  TouchableOpacity,
 } from "react-native";
 import { useRouter } from "expo-router";
 import CustomButton from "../../components/CustomButton";
@@ -12,11 +13,11 @@ import React, { useEffect, useState } from "react";
 import PlanProgress from "../../components/PlanProgress";
 import QuestList from "@/components/QuestList";
 import { CircularProgress } from "react-native-circular-progress";
-import { useHome } from "../../context/HomeContext"; 
+import { useHome } from "../../context/HomeContext";
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { homeData, loading, refreshHomeData } = useHome(); 
+  const { homeData, loading, refreshHomeData } = useHome();
 
   if (loading) {
     return (
@@ -37,7 +38,7 @@ export default function HomeScreen() {
   const { user, plans, quests } = homeData;
   const base_image_url =
     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
-  
+
   // // Calculate user XP percentage for the progress circle
   // // Assuming XP level is between 0 and 100, adjust as needed
   const userXpPercentage = user.xpLevel / 1000;
@@ -62,9 +63,17 @@ export default function HomeScreen() {
             Welcome {user.firstName} {user.lastName}
           </Text>
           <Text style={styles.xpText}>XP Level: {user.xpLevel}</Text>
+          <TouchableOpacity
+            style={styles.leaderboardButton}
+            onPress={() => router.push("/(stack)/leaderboard")}
+          >
+            <Image
+              source={require("../../assets/images/icons/podium.png")}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
         </View>
       </View>
-
 
       {/* Show Leaderboard gomb */}
       {/* <CustomButton title="Show Leaderboard" onPress={() => router.push("/leaderboard")} /> */}
@@ -134,5 +143,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  leaderboardButton: {
+    marginRight: 15,
+    padding: 8,
+  },
+  icon: {
+    width: 26,
+    height: 26,
+    resizeMode: "contain",
   },
 });

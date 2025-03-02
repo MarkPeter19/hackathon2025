@@ -16,14 +16,14 @@ export default function StackLayout() {
             title: "Home",
             headerBackVisible: false,
             gestureEnabled: true,
-            headerRight: () => (
-              <TouchableOpacity
-                style={styles.leaderboardButton}
-                onPress={() => router.push("/(stack)/leaderboard")}
-              >
-                <Image source={require("../../assets/images/icons/podium.png")} style={styles.icon} />
-              </TouchableOpacity>
-            ),
+            // headerRight: () => (
+            //   <TouchableOpacity
+            //     style={styles.leaderboardButton}
+            //     onPress={() => router.push("/(stack)/leaderboard")}
+            //   >
+            //     <Image source={require("../../assets/images/icons/podium.png")} style={styles.icon} />
+            //   </TouchableOpacity>
+            // ),
           }}
         />
         <Stack.Screen name="planner" options={{ title: "Planner" }} />

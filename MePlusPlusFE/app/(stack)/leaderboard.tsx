@@ -28,7 +28,7 @@ export default function LeaderboardScreen() {
     if (homeData?.user) {
       const currentUser = {
         id: "4",
-        name: `YOU`,
+        name: `${homeData.user.lastName}`,
         xpLevel: homeData.user.xpLevel,
       };
 
