@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { Quest } from "../models/Home";
 import Checkbox from "expo-checkbox";
 import PracticeModal from "./PracticeModal"; // Importáljuk a modalt
+import { updateQuest } from "@/service/Fetching"; // Import the updateQuest function
 
 // Ikonok betöltése
 const icons: { [key: string]: any } = {
@@ -32,6 +33,7 @@ interface Props {
 const QuestItem: React.FC<Props> = ({ quest }) => {
   const [isChecked, setChecked] = useState(quest.isDone);
   const [modalVisible, setModalVisible] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const router = useRouter();
 
   // A kategória neve kisbetűssé alakítva (normalizálás)
@@ -78,8 +80,25 @@ const QuestItem: React.FC<Props> = ({ quest }) => {
     router.push(
       `/practice-timer?duration=${durationInMinutes}&description=${encodeURIComponent(
         questName
-      )}&xp=${quest.xpLevel}`
+      )}&xp=${quest.xpLevel}&questId=${quest.id}`
     );
+  };
+
+  const handleCheckboxChange = async (newValue: boolean) => {
+    // Only allow checking if not already checked and not currently updating
+    if (isChecked || isUpdating) return;
+    
+    try {
+      setIsUpdating(true);
+      // Call the API to update the quest status
+      await updateQuest(quest.id);
+      setChecked(true);
+    } catch (error) {
+      console.error("Failed to update quest status:", error);
+      Alert.alert("Error", "Failed to update quest status. Please try again.");
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   return (
@@ -87,9 +106,13 @@ const QuestItem: React.FC<Props> = ({ quest }) => {
       <TouchableOpacity
         style={[styles.container, isChecked && styles.completed]}
         onPress={() => {
+          // Prevent any action if quest is already completed
+          if (isChecked || quest.isDone) return;
+          
           if (questType === "Practice") setModalVisible(true);
           else if (questType === "Quiz") router.push(`/quizz`);
         }}
+        disabled={isChecked || quest.isDone || isUpdating} // Explicitly check quest.isDone
       >
         <View style={styles.content}>
           {/* Ikon megjelenítése */}
@@ -97,7 +120,7 @@ const QuestItem: React.FC<Props> = ({ quest }) => {
 
           {/* Szöveg és XP érték */}
           <View style={styles.textContainer}>
-            <Text style={styles.text}>{questName}</Text>
+            <Text style={[styles.text, isChecked && styles.completedText]}>{questName}</Text>
             <Text style={styles.xpText}>{quest.xpLevel} XP</Text>
           </View>
         </View>
@@ -106,9 +129,10 @@ const QuestItem: React.FC<Props> = ({ quest }) => {
         <Checkbox
           style={styles.checkbox}
           value={isChecked}
-          onValueChange={setChecked}
+          onValueChange={handleCheckboxChange}
           color={isChecked ? "#4CAF50" : "#FFF"}
-          
+          // disabled={isChecked || quest.isDone || isUpdating} // Also check quest.isDone here
+          disabled={true}
         />
       </TouchableOpacity>
 
@@ -119,7 +143,7 @@ const QuestItem: React.FC<Props> = ({ quest }) => {
         onStart={startPracticeQuest}
         duration={quest.checkQuest?.mesure || "Unknown"}
         description={questName}
-        xp={quest.xpLevel}
+        quest={quest}
       />
     </>
   );
@@ -138,6 +162,11 @@ const styles = StyleSheet.create({
   },
   completed: {
     opacity: 0.5,
+    backgroundColor: "#e8e8e8", // Slightly darker background for completed items
+  },
+  completedText: {
+    textDecorationLine: 'line-through',
+    color: '#888',
   },
   content: {
     flexDirection: "row",

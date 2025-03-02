@@ -2,13 +2,15 @@ import React from "react";
 import { View, Text, StyleSheet, Modal } from "react-native";
 import CustomButton from "./CustomButton";
 
+import { Quest } from "../models/Home";
+
 interface PracticeModalProps {
   visible: boolean;
   onClose: () => void;
   onStart: () => void;
   duration: string;
   description: string;
-  xp: number;
+  quest: Quest;
 }
 
 const PracticeModal: React.FC<PracticeModalProps> = ({
@@ -17,7 +19,7 @@ const PracticeModal: React.FC<PracticeModalProps> = ({
   onStart,
   duration,
   description,
-  xp,
+  quest,
 }) => {
   return (
     <Modal animationType="fade" transparent={true} visible={visible} onRequestClose={onClose}>
@@ -26,7 +28,7 @@ const PracticeModal: React.FC<PracticeModalProps> = ({
           <Text style={styles.modalTitle}>Start Practice Quest</Text>
           <Text style={styles.modalText}>Quest: {description}</Text>
           <Text style={styles.duration}>Duration: {duration}</Text>
-          <Text style={styles.xpText}>Reward: {xp} XP</Text>
+          <Text style={styles.xpText}>Reward: {quest.xpLevel} XP</Text>
 
           {/* Gombok */}
           <View style={styles.buttonContainer}>

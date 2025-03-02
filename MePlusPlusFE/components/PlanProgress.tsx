@@ -38,8 +38,9 @@ interface Props {
 
 const PlanProgress: React.FC<Props> = ({ plan }) => {
   // 7 segments
-  const progressSegments = Math.min(7, Math.floor((plan.progressed / 100) * 7));
-  const progressPercentage = (progressSegments / 7) * 100;
+  // const progressSegments = Math.min(7, Math.floor((plan.progressed / 100) * 7));
+  // const progressPercentage = (progressSegments / 7) * 100;
+  const progressPercentage = plan.progressed * 10;
 
   // select icon by category name
   const iconSource = icons[plan.categoryName] || icons["default"];

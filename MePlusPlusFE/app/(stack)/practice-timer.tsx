@@ -7,7 +7,7 @@ import CompletionModal from "@/components/CompletionModal";
 import ExitConfirmationModal from "@/components/ExitModal";
 
 // Assume updateUserXp is imported from your API utility
-import { updateUserXp } from "@/service/Fetching";
+import { updateQuest, updateUserXp } from "@/service/Fetching";
 import FailConfirmationModal from "@/components/FailConfirmationModal";
 
 const formatTime = (seconds: number) => {
@@ -22,8 +22,9 @@ const PracticeTimer = () => {
   const [showExitModal, setShowExitModal] = useState(false);
   const [showFailModal, setShowFailModal] = useState(false);
   const router = useRouter();
-  const { duration = "0", description = "Unknown", xp = "0" } = useLocalSearchParams();
+  const { duration = "0", description = "Unknown", xp = "0", questId = "0" } = useLocalSearchParams();
   const xpValue = Array.isArray(xp) ? xp[0] : xp.toString();
+  const questIdValue = Array.isArray(questId) ? questId[0] : questId.toString();
 
   const timeInSeconds = parseInt(Array.isArray(duration) ? duration[0] : duration) * 60;
   const [timeLeft, setTimeLeft] = useState(timeInSeconds);
@@ -34,13 +35,18 @@ const PracticeTimer = () => {
     if (timeLeft > 0 && appActive) {
       timer = setInterval(() => setTimeLeft((t) => t - 1), 1000);
     } else if (timeLeft <= 1) {
-      updateUserXp(4, Math.round(parseInt(xpValue) / 2))
-        .then(() => console.log("XP updated successfully"))
-        .catch((error) => console.error("Failed to update XP:", error));
+      // Update XP and mark the quest as completed
+      Promise.all([
+        updateUserXp(4, Math.round(parseInt(xpValue) / 2)),
+        updateQuest(parseInt(questIdValue))
+      ])
+        .then(() => console.log("XP and quest updated successfully"))
+        .catch((error) => console.error("Failed to update:", error));
+        
       setShowCompleteModal(true);
     }
     return () => clearInterval(timer);
-  }, [timeLeft, appActive]);
+  }, [timeLeft, appActive, xpValue, questIdValue]);
 
   // Figyeli az alkalmazás állapotát (aktív / háttérben van)
   useEffect(() => {

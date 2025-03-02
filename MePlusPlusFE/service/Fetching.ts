@@ -68,4 +68,8 @@ export function updateUserXp(userId: number, xpAmount: number): Promise<any> {
     return axiosPut(`${url}/api/Quest/updateUserXp?userId=${userId}&xpAmount=${xpAmount}`, null);
 }
 
+export function updateQuest(questId: number): Promise<any> {
+    return axiosPut(`${url}/api/Quest/updateQuestDone/${questId}`, null);
+}
+
 
