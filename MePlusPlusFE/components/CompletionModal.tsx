@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Modal } from "react-native";
 import CustomButton from "./CustomButton";
 import { useRouter } from "expo-router";
-import { updateUserXp } from "../service/Fetching";
 import { useHome } from "../context/HomeContext"; // Hozzáadva a globális állapotkezelés
 
 interface CompletionModalProps {
   visible: boolean;
-  xp: string;
+  xp?: string;
   onClose: () => void;
 }
 
@@ -18,21 +17,6 @@ const CompletionModal: React.FC<CompletionModalProps> = ({
 }) => {
   const router = useRouter();
   const { refreshHomeData } = useHome(); // Hozzáadva a frissítés funkciót
-  const [xpUpdated, setXpUpdated] = useState(false);
-
-  // useEffect(() => {
-  //   if (visible && xp && !xpUpdated) {
-  //     const xpAmount = parseInt(xp);
-  //     if (!isNaN(xpAmount)) {
-  //       updateUserXp(4, xpAmount)
-  //         .then(() => {
-  //           console.log("XP updated successfully");
-  //           setXpUpdated(true);
-  //         })
-  //         .catch((error) => console.error("Failed to update XP:", error));
-  //     }
-  //   }
-  // }, [visible, xp, xpUpdated]);
 
   return (
     <Modal animationType="fade" transparent={true} visible={visible}>
@@ -47,7 +31,6 @@ const CompletionModal: React.FC<CompletionModalProps> = ({
             title="Go to Home"
             onPress={() => {
               refreshHomeData(); // Home adatokat frissítjük!
-              setXpUpdated(false);
               onClose();
               router.replace("/");
             }}
